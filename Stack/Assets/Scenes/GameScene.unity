@@ -355,11 +355,11 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 19f86ff8eecba494b818ab96e3ad4bd9, type: 3}
-    m_FontSize: 60
+    m_FontSize: 75
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
-    m_MaxSize: 70
+    m_MaxSize: 75
     m_Alignment: 1
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -458,7 +458,7 @@ Transform:
   m_PrefabInternal: {fileID: 1376165835}
   m_GameObject: {fileID: 1372379857}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.04, z: 0}
   m_LocalScale: {x: 30, y: 3.5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -476,13 +476,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b93f7ac8e7da9489ab281676c6322d75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lateralSpeed: 3
-  lateralLimit: 1.88
+  lateralSpeed: 4
+  fallSpeed: 10
   dropTop: {fileID: 1729817713}
   chunkPrefab: {fileID: 1569431470459964, guid: e2d1bd9844c07447d8ecf6d2f418f1ac,
     type: 2}
   dropPadding: 0.03
-  spawnOffset: 0.1
+  spawnOffset: 0.01
 --- !u!1001 &1376165835
 Prefab:
   m_ObjectHideFlags: 0
@@ -496,7 +496,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4387192975447880, guid: 976f9f15c31ad4eacbe8cea755278a81, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.04
       objectReference: {fileID: 0}
     - target: {fileID: 4387192975447880, guid: 976f9f15c31ad4eacbe8cea755278a81, type: 2}
       propertyPath: m_LocalPosition.z
@@ -542,6 +542,21 @@ Prefab:
         type: 2}
       propertyPath: m_Color.b
       value: 0.5896226
+      objectReference: {fileID: 0}
+    - target: {fileID: 114049853163267150, guid: 976f9f15c31ad4eacbe8cea755278a81,
+        type: 2}
+      propertyPath: spawnOffset
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 114049853163267150, guid: 976f9f15c31ad4eacbe8cea755278a81,
+        type: 2}
+      propertyPath: fallSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114049853163267150, guid: 976f9f15c31ad4eacbe8cea755278a81,
+        type: 2}
+      propertyPath: lateralSpeed
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 976f9f15c31ad4eacbe8cea755278a81, type: 2}

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MovingPlatform : MonoBehaviour {
 
@@ -48,25 +49,29 @@ public class MovingPlatform : MonoBehaviour {
 
     void Update ()
     {
+        // Constant lateral moving
         if (currentState == State.Moving)
         {
-            // Constant moving
             float maxPoint = (screenWidth - spriteSize.x / 2);
             if (Mathf.Abs(transform.position.x) >= maxPoint)  // switch direction
                 direction *= -1;
             MoveTo(x: direction * maxPoint, speed: lateralSpeed);
 
-            // Drop action
             if (Input.GetKeyDown(KeyCode.Space))
                 StartDropping();
         }
 
+        // Falling
         if (currentState == State.Dropping)
         {
             MoveTo(y: dropY, speed: fallSpeed);
             if (transform.position.y <= dropY)
                 ReachBase();
         }
+
+        // Restart
+        if (currentState == State.Dropped && lastOne && Input.GetKeyDown(KeyCode.Space))
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
 
@@ -113,10 +118,11 @@ public class MovingPlatform : MonoBehaviour {
 
     void ReachBase()
     {
+        currentState = State.Dropped;
+
         if (lastOne)  // game over
         {
             GetComponent<SpriteRenderer>().color = Color.red;
-            Time.timeScale = 0;
             return;
         }
 

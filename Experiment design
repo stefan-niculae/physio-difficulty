@@ -1,0 +1,62 @@
+==== Independent variable ====
+Game difficulty (easy, hard, adaptive)
+
+
+==== Dependent variable ====
+Player enjoyment
+
+
+===== Design style ===== 
+(a) Within-subjects
+ - every subject will play all 3 versions of the game
+
+(b) Counterbalanced
+ - participants will be evenly divided into 6 groups, each group playing a specific order of games, e.g. easy->hard->adaptive and easy->adaptive->hard; there are 6 possible orders
+
+
+===== Measurements =====
+(a) Physiological signals
+ - HR, facial expressions, EEG and keyboard input (to be determined)
+
+(b) Real-time game difficulty adaptation
+ - for the adaptive version, it may be good to track our difficulty setting
+
+(c) Game progress
+ - record the time when the stacking happens, how good the stacking is, and when the player loses
+
+(d) Self-reported player enjoyment
+ - On a scale of 1 to 5, how would you rate the game? (1 - not at all happy with the game, 5 - very happy with the game)
+
+(e) Objective measurement of player enjoyment
+ - record how long the subject spends playing the game (assuming that we let the subject play as long as they want to, which is feasible since each round probably won't last long) 
+
+
+==== Expected results ====
+(a) Game difficulty vs self-reported player enjoyment
+ - does the adaptive difficulty adjustment increase greater player enjoyment?
+
+(b) Game difficulty vs objective meansurement of player enjoyment
+ - does the adaptive difficulty adjustment increase the time players spend on the game?
+
+(c) Game process vs physiological signals
+ - can we extract ERPs (event-related potentials) for a good stack, a bad stack or losing the game?
+
+(d) Real-time game difficulty adaptation vs physiological signals
+ - have we successfully lessened boredom / frustration?
+ - how frequent is the adjustment?
+ - is there a correlation between real-time difficulty and the physiological signals?
+
+
+===== Procedure =====
+(a) Tentative experiment design
+ - Participant rests for 5 minutes, while baseline physiological signals are collected
+ - With 1 researcher present (this is to elicit more facial expressions), the participant plays Game 1. The participant can play as long as he/she wants, and can restart the game after losing
+ - The participant rates Game 1
+ - Under the same conditions as before, the participant plays Game 2, rates Game 2, plays Game 3, and rates Game 3 sequentially
+Note: for different groups of participants, the sequence of the games will be different. All 6 possible sequences are: EHA, EAH, AEH, AHE, HAE, and HEA (E for easy, H for hard, and A for adaptive).
+
+(b) Small-scale pilot study
+On a small number of participants (maybe the 4 of us + 2 friends, so that all sequences can get tested once), we will conduct a pilot study to make sure our design plan works.
+
+(c) Full-scale study
+After adjusting the above experiment design based on the pilot study, we will conduct a full-scale study on our participants.

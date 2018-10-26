@@ -1,0 +1,74 @@
+body {
+    background-color: #FDFDFD;
+    padding-top: 10% !important;
+}
+
+.star-desc {
+    color: grey;
+}
+
+.field {
+    padding-bottom: 4em;
+}
+
+.container {
+    width: 600px !important;
+}
+.main.container {
+    height: 900px !important;
+    padding: 0;
+}
+
+.steps {
+    width: 600px !important;
+    margin-bottom: 5% !important;
+}
+
+.steps .title {
+    /* black not blue */
+    color: rgba(0,0,0,.87) !important;
+}
+
+label {
+    width: 200px;
+    text-align: center;
+    /*font-weight: normal !important;*/
+    font-size: 1em !important;
+}
+
+.rating .icon {
+    width: 40px !important;
+}
+
+.rating-desc span {
+    width: 100px;
+    display: inline-block;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.rating-desc .left {
+    text-align: left;
+}
+
+.rating-desc .right {
+    text-align: right;
+}
+
+button {
+    width: 100px;
+    margin: auto !important;
+    display: block !important;
+    margin-top: 2em !important;
+}
+
+form {
+    margin: auto !important;
+    display: block !important;
+    width: 203px;
+    padding-top: 20%;
+}
+
+.instructions {
+    margin-bottom: 4em !important;
+}

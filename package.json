@@ -1,0 +1,28 @@
+{
+  "name": "physio-difficulty",
+  "version": "1.0.0",
+  "description": "adaptive video game",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stefan-niculae/physio-difficulty.git"
+  },
+  "keywords": [
+    "adaptive",
+    "videogame",
+    "difficulty",
+    "physio"
+  ],
+  "author": "Stefan Niculae",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stefan-niculae/physio-difficulty/issues"
+  },
+  "homepage": "https://github.com/stefan-niculae/physio-difficulty#readme",
+  "dependencies": {
+    "semantic-ui-css": "^2.4.1"
+  }
+}

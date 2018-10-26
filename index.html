@@ -4,22 +4,126 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Stack</title>
-    <!-- <link rel="shortcut icon" href="TemplateData/favicon.ico"> -->
-    <link rel="stylesheet" href="Stack/web-build/TemplateData/style.css">
-    <script src="Stack/web-build/TemplateData/UnityProgress.js"></script>  
+
+    <!-- Unity -->
+    <script src="Stack/web-build/TemplateData/UnityProgress.js"></script>
     <script src="Stack/web-build/Build/UnityLoader.js"></script>
     <script>
       var gameInstance = UnityLoader.instantiate("gameContainer", "Stack/web-build/Build/web-build.json", {onProgress: UnityProgress});
     </script>
+
+    <!-- Semantic UI -->
+    <link rel="stylesheet" href="node_modules/semantic-ui-css/semantic.min.css">
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/semantic-ui-css/semantic.min.js"></script>
+
+    <!--Custom -->
+    <link rel="stylesheet" href="web/style.css">
+    <script src="web/script.js"></script>
+
   </head>
   <body>
-    <div class="webgl-content">
-      <div id="gameContainer" style="width: 500px; height: 800px"></div>
-      <div class="footer">
-        <!-- <div class="webgl-logo"></div> -->
-        <div class="fullscreen" onclick="gameInstance.SetFullscreen(1)"></div>
-        <!-- <div class="title">Stack</div> -->
+    <!-- steps progress -->
+    <div class="ui container">
+
+      <div class="ui tiny steps">
+        <!-- add .completed to complete -->
+        <div class="completed step">
+          <div class="content">
+            <div class="title">Intro</div>
+            <div class="description">Setup</div>
+          </div>
+        </div>
+
+        <div class="completed step">
+          <div class="content">
+            <div class="title">Game 1</div>
+            <div class="description">Play & rate</div>
+          </div>
+        </div>
+
+        <div class="active step">
+          <div class="content">
+            <div class="title">Game 2</div>
+            <div class="description">Play & rate</div>
+          </div>
+        </div>
+
+        <div class="active step">
+          <div class="content">
+            <div class="title">Game 3</div>
+            <div class="description">Play & rate</div>
+          </div>
+        </div>
+
+        <div class="active step">
+          <div class="content">
+            <div class="title">Game 4</div>
+            <div class="description">Play & rate</div>
+          </div>
+        </div>
+
+        <div class="active step">
+          <div class="content">
+            <div class="title">Finale</div>
+            <div class="description">Done</div>
+          </div>
+        </div>
       </div>
     </div>
+
+    <div class="ui raised main container segment">
+
+      <div class="ui move down reveal">
+
+        <div class="visible content">
+          <div id="gameContainer" style="width: 600px; height: 900px"></div>
+        </div>
+
+        <!-- add .active to activate -->
+        <div class="ui inverted dimmer">
+          <div class="ui text loader"></div>
+        </div>
+
+
+        <div class="hidden content">
+          <form class="ui form" action="#">
+            <p class="instructions">Please rate your previous game:</p>
+
+            <div class="field">
+              <label>Difficulty</label>
+              <div class="ui massive star rating" data-rating="0" data-max-rating="5"></div>
+              <p class="rating-desc">
+                <span class="left">easy</span>
+                <span class="right">hard</span>
+              </p>
+            </div>
+
+            <div class="field">
+              <label>Valence</label>
+              <div class="ui massive star rating" data-rating="0" data-max-rating="5"></div>
+              <p class="rating-desc">
+                <span class="left">frustrating</span>
+                <span class="right">challenging</span>
+              </p>
+            </div>
+
+            <div class="field">
+              <label>Enjoyment</label>
+              <div class="ui massive heart rating" data-rating="0" data-max-rating="5"></div>
+              <p class="rating-desc">
+                <span class="left">unfun</span>
+                <span class="right">fun</span>
+              </p>
+            </div>
+
+            <button class="ui button" type="submit">Next</button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+
   </body>
 </html>

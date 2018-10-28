@@ -6,16 +6,15 @@
     <title>Stack</title>
 
     <!-- Unity -->
-    <script src="Stack/web-build/TemplateData/UnityProgress.js"></script>
     <script src="Stack/web-build/Build/UnityLoader.js"></script>
     <script>
-      var gameInstance = UnityLoader.instantiate("gameContainer", "Stack/web-build/Build/web-build.json", {onProgress: UnityProgress});
+      var gameInstance = UnityLoader.instantiate("gameContainer", "Stack/web-build/Build/web-build.json");
     </script>
 
     <!-- Semantic UI -->
-    <link rel="stylesheet" href="node_modules/semantic-ui-css/semantic.min.css">
-    <script src="node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="node_modules/semantic-ui-css/semantic.min.js"></script>
+    <link rel="stylesheet" href="web/semantic.min.css">
+    <script src="web/jquery.min.js"></script>
+    <script src="web/semantic.min.js"></script>
 
     <!--Custom -->
     <link rel="stylesheet" href="web/style.css">

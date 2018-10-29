@@ -215,6 +215,7 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
+  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -295,6 +296,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c352bc7611c426eb0a40d46d3b5040, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &951202319
 GameObject:
   m_ObjectHideFlags: 0
@@ -574,6 +586,7 @@ MonoBehaviour:
     type: 2}
   score: {fileID: 1151797224}
   difficulty: {fileID: 448881549}
+  instrumenting: {fileID: 519420033}
   dropPadding: 0.03
   spawnOffset: 0.01
 --- !u!1001 &1376165835
@@ -666,6 +679,11 @@ Prefab:
       propertyPath: score
       value: 
       objectReference: {fileID: 1151797224}
+    - target: {fileID: 114049853163267150, guid: 976f9f15c31ad4eacbe8cea755278a81,
+        type: 2}
+      propertyPath: instrumenting
+      value: 
+      objectReference: {fileID: 519420033}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 976f9f15c31ad4eacbe8cea755278a81, type: 2}
   m_IsPrefabAsset: 0

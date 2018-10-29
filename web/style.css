@@ -24,20 +24,17 @@ body {
     margin-bottom: 5% !important;
 }
 
-.steps .title {
-    /* black not blue */
-    color: rgba(0,0,0,.87) !important;
-}
-
-label {
-    width: 200px;
-    text-align: center;
-    /*font-weight: normal !important;*/
-    font-size: 1em !important;
+.ui.steps .step .description {
+    /* FIXME not working */
+    font-size: 1.1em !important;
 }
 
 .rating .icon {
     width: 40px !important;
+}
+
+.radio label {
+    text-align: left !important;
 }
 
 .rating-desc span {

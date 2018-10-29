@@ -47,9 +47,9 @@ public class Difficulty : MonoBehaviour
             amount -= 1;
     }
 
-    // call from js: gameInstance.SendMessage("Difficulty", "SetDifficulty", "75")
-    public void SetDifficulty(string param)
+    // call from js: gameInstance.SendMessage("Difficulty", "SetDifficulty", 75)
+    public void SetDifficulty(int param)
     {
-        amount = Convert.ToInt32(param);
+        amount = param;
     }
 }

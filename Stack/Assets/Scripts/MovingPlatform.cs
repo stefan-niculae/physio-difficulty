@@ -9,6 +9,7 @@ public class MovingPlatform : MonoBehaviour {
     public GameObject chunkPrefab;
     public Score score;
     public Difficulty difficulty;
+    public Instrumenting instrumenting;
 
     public float dropPadding = .03f;
     public float spawnOffset = .1f;
@@ -36,18 +37,6 @@ public class MovingPlatform : MonoBehaviour {
     }
 
 
-    private void MoveTo(float? x=null, float? y=null, float? speed=null) 
-    {
-        Vector2 current = transform.position;
-        Vector2 target = new Vector2(
-            x ?? current.x,
-            y ?? current.y
-        );
-        transform.position = Vector2.MoveTowards(current, target,
-                                                 (speed ?? 1) * Time.deltaTime);
-    }
-
-
     void Update ()
     {
         // Constant lateral moving
@@ -72,7 +61,19 @@ public class MovingPlatform : MonoBehaviour {
 
         // Restart
         if (currentState == State.Dropped && lastOne && Input.GetKeyDown(KeyCode.Space))
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            RestartGame();
+    }
+
+
+    private void MoveTo(float? x = null, float? y = null, float? speed = null)
+    {
+        Vector2 current = transform.position;
+        Vector2 target = new Vector2(
+            x ?? current.x,
+            y ?? current.y
+        );
+        transform.position = Vector2.MoveTowards(current, target,
+                                                 (speed ?? 1) * Time.deltaTime);
     }
 
 
@@ -86,6 +87,10 @@ public class MovingPlatform : MonoBehaviour {
         fallingOver = this.transform.position.x - dropTop.transform.position.x;
         newSize = transform.localScale;
         newSize.x -= Mathf.Abs(fallingOver) * scaleCoeff;
+        newSize.x = Mathf.Max(0, newSize.x);
+
+        // Instrumenting
+        instrumenting.Record(transform.position.x, newSize.x / scaleCoeff);
 
         // TODO if falling too close (remaining platform would be too small)
         if (Mathf.Abs(fallingOver) >= transform.localScale.x / scaleCoeff) 
@@ -124,6 +129,7 @@ public class MovingPlatform : MonoBehaviour {
         if (lastOne)  // game over
         {
             GetComponent<SpriteRenderer>().color = Color.red;
+            instrumenting.ReportGame();
             return;
         }
 
@@ -149,5 +155,10 @@ public class MovingPlatform : MonoBehaviour {
         Vector3 chunkPosition = this.transform.position;
         chunkPosition.x += spriteSize.x / 2 * Mathf.Sign(fallingOver);
         chunk.transform.position = chunkPosition;
+    }
+
+    // also external
+    public void RestartGame() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

@@ -8,9 +8,7 @@
     <!-- Unity -->
     <script src="Stack/web-build/Build/UnityLoader.js"></script>
     <script>
-      var gameInstance = UnityLoader.instantiate("gameContainer", "Stack/web-build/Build/web-build.json");
-
-      function receiveScore(score) {
+        function receiveScore(score) {
           console.log(score);
       }
     </script>
@@ -21,6 +19,23 @@
     <script src="web/semantic.min.js"></script>
 
     <!--Custom -->
+    <script src="https://www.gstatic.com/firebasejs/5.5.6/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.6/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.6/firebase-database.js"></script>
+    <script>
+        // Initialize Firebase
+        var fireBaseConfig = {
+            apiKey: "AIzaSyC6GKLMYX92jrrANjmhfQMPKWEhLqtgt_M",
+            authDomain: "physio-difficulty.firebaseapp.com",
+            databaseURL: "https://physio-difficulty.firebaseio.com",
+            projectId: "physio-difficulty",
+            storageBucket: "physio-difficulty.appspot.com",
+            messagingSenderId: "844160892426"
+        };
+        firebase.initializeApp(fireBaseConfig);
+    </script>
+
+
     <link rel="stylesheet" href="web/style.css">
     <script src="web/script.js"></script>
 
@@ -31,45 +46,39 @@
 
       <div class="ui tiny steps">
         <!-- add .completed to complete -->
-        <div class="completed step">
-          <div class="content">
-            <div class="title">Intro</div>
-            <div class="description">Setup</div>
-          </div>
-        </div>
-
-        <div class="completed step">
-          <div class="content">
-            <div class="title">Game 1</div>
-            <div class="description">Play & rate</div>
-          </div>
-        </div>
-
         <div class="active step">
           <div class="content">
-            <div class="title">Game 2</div>
-            <div class="description">Play & rate</div>
+            <div class="description">Intro</div>
           </div>
         </div>
 
-        <div class="active step">
+        <div class="disabled step">
           <div class="content">
-            <div class="title">Game 3</div>
-            <div class="description">Play & rate</div>
+            <div class="description">Game 1</div>
           </div>
         </div>
 
-        <div class="active step">
+        <div class="disabled step">
           <div class="content">
-            <div class="title">Game 4</div>
-            <div class="description">Play & rate</div>
+            <div class="description">Game 2</div>
           </div>
         </div>
 
-        <div class="active step">
+        <div class="disabled step">
           <div class="content">
-            <div class="title">Finale</div>
-            <div class="description">Done</div>
+            <div class="description">Game 3</div>
+          </div>
+        </div>
+
+        <div class="disabled step">
+          <div class="content">
+            <div class="description">Game 4</div>
+          </div>
+        </div>
+
+        <div class="disabled step">
+          <div class="content">
+            <div class="description">Outro</div>
           </div>
         </div>
       </div>
@@ -77,54 +86,129 @@
 
     <div class="ui raised main container segment">
 
-      <div class="ui move down reveal">
 
-        <div class="visible content">
-          <div id="gameContainer" style="width: 600px; height: 900px"></div>
-        </div>
-
-        <!-- add .active to activate -->
-        <div class="ui inverted dimmer">
-          <div class="ui text loader"></div>
-        </div>
-
-
-        <div class="hidden content">
-          <form class="ui form" action="#">
-            <p class="instructions">Please rate your previous game:</p>
-
-            <div class="field">
-              <label>Difficulty</label>
-              <div class="ui massive star rating" data-rating="0" data-max-rating="5"></div>
-              <p class="rating-desc">
-                <span class="left">easy</span>
-                <span class="right">hard</span>
-              </p>
-            </div>
-
-            <div class="field">
-              <label>Valence</label>
-              <div class="ui massive star rating" data-rating="0" data-max-rating="5"></div>
-              <p class="rating-desc">
-                <span class="left">frustrating</span>
-                <span class="right">challenging</span>
-              </p>
-            </div>
-
-            <div class="field">
-              <label>Enjoyment</label>
-              <div class="ui massive heart rating" data-rating="0" data-max-rating="5"></div>
-              <p class="rating-desc">
-                <span class="left">unfun</span>
-                <span class="right">fun</span>
-              </p>
-            </div>
-
-            <button class="ui button" type="submit">Next</button>
-          </form>
-        </div>
-
+      <div id="game"
+           style="width: 600px; height: 900px; display: none">
       </div>
+
+        <!--<div class="ui active inverted dimmer">-->
+          <!--<div class="ui text loader"></div>-->
+        <!--</div>-->
+
+      <form id="intro-form" class="ui form"
+            onsubmit="advance(); return false"
+      >
+        <p class="instructions">Preliminary info about yourself:</p>
+
+        <div class="field">
+          <div class="ui input focus">
+            <input id="name-input" name="name" type="text" placeholder="Name">
+          </div>
+        </div>
+
+        <div class="field">
+          <p>How skilled are you at video-games?</p>
+          <div id="skill-rating" class="ui massive star rating" data-rating="0" data-max-rating="5"></div>
+          <!--<p class="rating-desc">-->
+            <!--<span class="left">unskilled</span>-->
+            <!--<span class="right">skilled</span>-->
+          <!--</p>-->
+        </div>
+
+        <div class="field">
+          <p>How competitive are you, in general?</p>
+          <div id="competitive-rating" class="ui massive star rating" data-rating="0" data-max-rating="5"></div>
+          <!--<p class="rating-desc">-->
+            <!--<span class="left">non-comp.</span>-->
+            <!--<span class="right">competitive</span>-->
+          <!--</p>-->
+        </div>
+
+        <button class="ui button" type="submit">Start</button>
+        <!--<div class="ui error message"></div>-->
+      </form>
+
+      <form id="ratings-form" class="ui form"
+            onsubmit="advance(); return false;"
+            style="display: none !important;"
+      >
+        <p class="instructions">Rate your previous game:</p>
+
+        <div class="field">
+          <!--<label>Difficulty</label>-->
+          <div id="difficulty-rating" class="ui massive star rating" data-rating="0" data-max-rating="5"></div>
+          <p class="rating-desc">
+            <span class="left">easy</span>
+            <span class="right">hard</span>
+          </p>
+        </div>
+
+        <div class="field">
+          <!--<label>Valence</label>-->
+          <div id="valence-rating" class="ui massive star rating" data-rating="0" data-max-rating="5"></div>
+          <p class="rating-desc">
+            <span class="left">frustrating</span>
+            <span class="right">challenging</span>
+          </p>
+        </div>
+
+        <div class="field">
+          <!--<label>Enjoyment</label>-->
+          <div id="enjoyment-rating" class="ui massive heart rating" data-rating="0" data-max-rating="5"></div>
+          <p class="rating-desc">
+            <span class="left">unfun</span>
+            <span class="right">fun</span>
+          </p>
+        </div>
+
+        <button class="ui primary button" type="submit">Next</button>
+      </form>
+
+
+      <form id="outro-form" class="ui form"
+            onsubmit="submitFinal()"
+            style="display: none !important;"
+      >
+        <p class="instructions">Closing thoughts:</p>
+
+        <div class="grouped fields">
+          <label>Best variation?</label>
+          <div class="field">
+            <div class="ui radio checkbox">
+              <input type="radio" name="variant">
+              <label>Game 1</label>
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui radio checkbox">
+              <input type="radio" name="variant">
+              <label>Game 2</label>
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui radio checkbox">
+              <input type="radio" name="variant">
+              <label>Game 3</label>
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui radio checkbox">
+              <input type="radio" name="variant">
+              <label>Game 4</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="field" style="margin-top: 5em">
+          <label>Any comments?</label>
+          <textarea id="comments" rows="6"></textarea>
+        </div>
+
+
+        <button class="ui button" type="submit">Done</button>
+      </form>
+
+
     </div>
 
 

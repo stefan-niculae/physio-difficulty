@@ -1,4 +1,4 @@
-let sessionId = +new Date()
+let sessionId = undefined
 let subjectName = undefined
 let gameVariant = 0
 let gameReplay = undefined
@@ -82,6 +82,7 @@ let advance = () => {
 
 let saveIntroInfo = () => {
     subjectName = document.getElementById('name-input').value;
+    sessionId = `${subjectName}, ${new Date}`
 
     DATABASE.ref(`${sessionId}/subjectInfo`).set({
         name: subjectName,

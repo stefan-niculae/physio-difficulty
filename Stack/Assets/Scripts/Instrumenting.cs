@@ -24,6 +24,12 @@ public class Instrumenting : MonoBehaviour
         Application.ExternalCall("gameLoaded");
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.X))
+            ReportGame(earlyExit: true);
+    }
+
     long UnixTimeNow()
     {
         var timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
@@ -39,7 +45,7 @@ public class Instrumenting : MonoBehaviour
         dropWidths.Add(width / originalWidth);
     }
 
-    public void ReportGame()
+    public void ReportGame(bool earlyExit=false)
     {
         Application.ExternalCall("gameOver", new object[] {
             dropTimes.ToArray(),  // the total time is difference between the last and the first
@@ -47,6 +53,12 @@ public class Instrumenting : MonoBehaviour
             dropWidths.ToArray(),  // for convenience
             dropDifficulties.ToArray(),
             // the total score is the amount of items
+            earlyExit
         });
+    }
+
+    // external
+    public void SetKeyboardCapture(int status) {
+        WebGLInput.captureAllKeyboardInput = (status == 1);
     }
 }

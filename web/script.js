@@ -1,13 +1,19 @@
-let sessionId = undefined
+let sessionId = undefined  // will be assigned
 let subjectName = undefined
-let gameVariant = 0
-let gameReplay = undefined
+let gameVariant = 0  // starts from 1
+let gameReplay = undefined  // starts from 1
 
 const DATABASE = firebase.database()
 
-const GAME_REPLAYS = [2, 2, 3, 3] // how many times each variant will be played
+const GAME_REPLAYS = [2, 2, 7, 7] // how many times each variant will be played
 const INITIAL_DIFFICULTY = [30, 80, 55, 65]
-// TODO press X to exit early out of the last one
+const EARLY_EXIT_REPLAY_ALLOWED = 4
+
+gameInstance = UnityLoader.instantiate('game', 'Stack/web-build/Build/web-build.json')
+gameInstance.sendMessage = function() {
+    print('sending', arguments)
+    gameInstance.sendMessage(arguments)
+}
 
 
 $(() => {
@@ -54,20 +60,17 @@ let advance = () => {
     if (gameVariant === 0) {
         saveIntroInfo()
         forceHide('#intro-form')
-
-        gameInstance = UnityLoader.instantiate('game', 'Stack/web-build/Build/web-build.json')
-        $('#game').show(0)
     }
     else {
         saveRatings()
         forceHide('#ratings-form')
-        gameInstance.SendMessage('Moving platform', 'RestartGame')
     }
-
+    gameInstance.SendMessage('Moving platform', 'RestartGame')
 
     if (gameVariant !== GAME_REPLAYS.length) { // show next game
         gameReplay = 1
         $('#game').show()
+        gameInstance.SendMessage('Main Camera', 'SetKeyboardCapture', 1)
     }
     else // done, show outro
         $('#outro-form').show()
@@ -81,7 +84,7 @@ let advance = () => {
 }
 
 let saveIntroInfo = () => {
-    subjectName = document.getElementById('name-input').value;
+    subjectName = document.getElementById('name-input').value
     sessionId = `${subjectName}, ${new Date}`
 
     DATABASE.ref(`${sessionId}/subjectInfo`).set({
@@ -93,6 +96,7 @@ let saveIntroInfo = () => {
 
 let showRatings = () => {
     forceHide('#game')
+    $('#early-exit-instruction').css({opacity: 0})  // reset previous instruction
 
     $('#ratings-form .rating').each((_, r) => $(r).rating('clear rating'))
     $('form button').removeClass('primary')
@@ -119,7 +123,9 @@ let submitFinal = () => {
     if (bestVariant > GAME_REPLAYS.length) // didn't chose any
         return
 
-    let toStore = {bestVariant}
+    const consented = $('#consent-checkbox')[0].checked
+
+    let toStore = {bestVariant, consented}
 
     const comments = document.getElementById('comments').value
     if (comments)
@@ -130,19 +136,32 @@ let submitFinal = () => {
 
 // external
 function gameLoaded() {
+    if (gameVariant === 0) {// still on the intro form, game not ready to accept input
+        gameInstance.SendMessage('Main Camera', 'SetKeyboardCapture', 0)
+        return
+    }
+
     // TODO replace with non-dummy difficulty setting
     gameInstance.SendMessage('Difficulty', 'SetDifficulty', INITIAL_DIFFICULTY[gameVariant - 1])
+
+    if (gameVariant >= 3 && gameReplay === EARLY_EXIT_REPLAY_ALLOWED)  // last two play allow early exit
+        $('#early-exit-instruction').animate({opacity: 1}, 400)
 }
 
-function gameOver(time, x, width, difficulty) {
+function gameOver(time, x, width, difficulty, earlyExit) {
+    earlyExit = (earlyExit === "True")  // convert str to bool
+
     DATABASE.ref(`${sessionId}/variant-${gameVariant}/replay-${gameReplay}`).update({
         time,
         x,
         width,
         difficulty,
+        earlyExit,
     })
 
-    if (gameReplay === GAME_REPLAYS[gameVariant - 1]) {// reached number of replays
+    // reached number of replays or bored
+    if (gameReplay === GAME_REPLAYS[gameVariant - 1] || earlyExit) {
+        gameInstance.SendMessage('Main Camera', 'SetKeyboardCapture', 0)
         showRatings()
     }
     gameReplay++

@@ -1,6 +1,6 @@
 body {
     background-color: #FDFDFD;
-    padding-top: 10% !important;
+    padding-top: 70px !important;
 }
 
 .star-desc {
@@ -11,17 +11,58 @@ body {
     padding-bottom: 4em;
 }
 
-.container {
+.main.container {
+    height: 700px !important;
+    width: 450px !important;
+    padding: 0;
+}
+
+.above.container {
     width: 600px !important;
 }
+
+.above p {
+    text-align: center;
+    padding-bottom: 1em;
+}
+
+#early-exit-instrucbody {
+    background-color: #FDFDFD;
+    padding-top: 70px !important;
+}
+
+.star-desc {
+    color: grey;
+}
+
+.field {
+    padding-bottom: 4em;
+}
+
 .main.container {
-    height: 900px !important;
+    height: 700px !important;
+    width: 450px !important;
     padding: 0;
+}
+
+.above.container {
+    width: 600px !important;
+}
+
+.above p {
+    text-align: center;
+    padding-bottom: 1em;
+}
+
+#early-exit-instruction {
+    opacity: 0;
+    font-size: 1.4em;
 }
 
 .steps {
     width: 600px !important;
     margin-bottom: 5% !important;
+    margin-left: auto !important;
 }
 
 .ui.steps .step .description {
@@ -63,7 +104,59 @@ form {
     margin: auto !important;
     display: block !important;
     width: 203px;
-    padding-top: 20%;
+    padding-top: 50px;
+}
+
+.instructions {
+    margin-bottom: 4em !important;
+}
+
+.steps {
+    width: 600px !important;
+    margin-bottom: 5% !important;
+    margin-left: auto !important;
+}
+
+.ui.steps .step .description {
+    /* FIXME not working */
+    font-size: 1.1em !important;
+}
+
+.rating .icon {
+    width: 40px !important;
+}
+
+.radio label {
+    text-align: left !important;
+}
+
+.rating-desc span {
+    width: 99px;
+    display: inline-block;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.rating-desc .left {
+    text-align: left;
+}
+
+.rating-desc .right {
+    text-align: right;
+}
+
+button {
+    width: 100px;
+    margin: auto !important;
+    display: block !important;
+    margin-top: 2em !important;
+}
+
+form {
+    margin: auto !important;
+    display: block !important;
+    width: 203px;
+    padding-top: 50px;
 }
 
 .instructions {

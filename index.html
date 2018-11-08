@@ -7,11 +7,6 @@
 
     <!-- Unity -->
     <script src="Stack/web-build/Build/UnityLoader.js"></script>
-    <script>
-        function receiveScore(score) {
-          console.log(score);
-      }
-    </script>
 
     <!-- Semantic UI -->
     <link rel="stylesheet" href="web/semantic.min.css">
@@ -42,7 +37,7 @@
   </head>
   <body>
     <!-- steps progress -->
-    <div class="ui container">
+    <div class="ui above container">
 
       <div class="ui tiny steps">
         <!-- add .completed to complete -->
@@ -54,25 +49,25 @@
 
         <div class="disabled step">
           <div class="content">
-            <div class="description">Game 1</div>
+            <div class="description">Game<br>Static A</div>
           </div>
         </div>
 
         <div class="disabled step">
           <div class="content">
-            <div class="description">Game 2</div>
+            <div class="description">Game<br>Static B</div>
           </div>
         </div>
 
         <div class="disabled step">
           <div class="content">
-            <div class="description">Game 3</div>
+            <div class="description">Game<br>Adaptive A</div>
           </div>
         </div>
 
         <div class="disabled step">
           <div class="content">
-            <div class="description">Game 4</div>
+            <div class="description">Game<br>Adaptive B</div>
           </div>
         </div>
 
@@ -82,13 +77,15 @@
           </div>
         </div>
       </div>
+
+      <p id="early-exit-instruction">Press <b>X</b> when you'd like to advance.</p>
     </div>
 
     <div class="ui raised main container segment">
 
 
       <div id="game"
-           style="width: 600px; height: 900px; display: none">
+           style="width: 450px; height: 700px; display: none">
       </div>
 
         <!--<div class="ui active inverted dimmer">-->
@@ -176,25 +173,25 @@
           <div class="field">
             <div class="ui radio checkbox">
               <input type="radio" name="variant">
-              <label>Game 1</label>
+              <label>Static A</label>
             </div>
           </div>
           <div class="field">
             <div class="ui radio checkbox">
               <input type="radio" name="variant">
-              <label>Game 2</label>
+              <label>Static B</label>
             </div>
           </div>
           <div class="field">
             <div class="ui radio checkbox">
               <input type="radio" name="variant">
-              <label>Game 3</label>
+              <label>Adaptive A</label>
             </div>
           </div>
           <div class="field">
             <div class="ui radio checkbox">
               <input type="radio" name="variant">
-              <label>Game 4</label>
+              <label>Adaptive B</label>
             </div>
           </div>
         </div>
@@ -202,6 +199,11 @@
         <div class="field" style="margin-top: 5em">
           <label>Any comments?</label>
           <textarea id="comments" rows="6"></textarea>
+        </div>
+
+        <div class="ui checkbox">
+          <input id="consent-checkbox" type="checkbox" name="consent" checked>
+          <label>Ok to use my data for this class project</label>
         </div>
 
 

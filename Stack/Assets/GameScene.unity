@@ -176,7 +176,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -307,6 +307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5c352bc7611c426eb0a40d46d3b5040, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  difficulty: {fileID: 448881549}
 --- !u!1 &951202319
 GameObject:
   m_ObjectHideFlags: 0

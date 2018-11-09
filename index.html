@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="web/semantic.min.css">
     <script src="web/jquery.min.js"></script>
     <script src="web/semantic.min.js"></script>
+    <script src="web/math.min.js"></script>
+    <script src="web/affectiveGame.js"></script>
 
     <!--Custom -->
     <script src="https://www.gstatic.com/firebasejs/5.5.6/firebase.js"></script>
@@ -81,6 +83,21 @@
       <p id="early-exit-instruction">Press <b>X</b> when you'd like to advance.</p>
     </div>
 
+	  <div class="ui floated segment" style="margin-left:1em">
+			<div class="ui items">
+				<div class="item">
+				  <div class="ui small image" style="min-width:150px;min-height:150px;width:150px;height:150px;">
+						<img id='capturedImage' src='images/defaultuser.png'>
+					</div>
+				</div>
+			<div class="item">
+				<div class="ui floated toggle checkbox">
+				  <input id='webcamToggle' type="checkbox" name="public" onchange="toggleVideo(this.checked)">
+				  <label>Webcam</label>
+				</div>
+			</div>
+		</div>
+		</div>
     <div class="ui raised main container segment">
 
 
@@ -121,7 +138,7 @@
           <!--</p>-->
         </div>
 
-        <button class="ui button" type="submit">Start</button>
+        <button class="ui button" type="submit" onclick='toggleVideo(true)'>Start</button>
         <!--<div class="ui error message"></div>-->
       </form>
 
@@ -158,7 +175,7 @@
           </p>
         </div>
 
-        <button class="ui primary button" type="submit">Next</button>
+        <button class="ui primary button" type="submit" onclick='toggleVideo(true)'>Next</button>
       </form>
 
 
@@ -212,7 +229,9 @@
 
 
     </div>
-
-
+		<div id="container" style="visibility:hidden;">
+		    <video autoplay="true" id="videoElement">
+		    </video>
+		</div>
   </body>
 </html>

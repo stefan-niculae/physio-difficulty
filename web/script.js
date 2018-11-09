@@ -5,7 +5,7 @@ let gameReplay = undefined  // starts from 1
 
 const DATABASE = firebase.database()
 
-const GAME_REPLAYS = [2, 2, 7, 7] // how many times each variant will be played
+const GAME_REPLAYS = [1, 1, 20, 20] // how many times each variant will be played
 const INITIAL_DIFFICULTY = [30, 80, 55, 65]
 const EARLY_EXIT_REPLAY_ALLOWED = 4
 
@@ -143,6 +143,9 @@ function gameLoaded() {
 
     // TODO replace with non-dummy difficulty setting
     gameInstance.SendMessage('Difficulty', 'SetDifficulty', INITIAL_DIFFICULTY[gameVariant - 1])
+    cur_difficulty = INITIAL_DIFFICULTY[gameVariant - 1]
+    start_difficulty = INITIAL_DIFFICULTY[gameVariant - 1]
+	 delta = [start_difficulty - 10, start_difficulty+10]
 
     if (gameVariant >= 3 && gameReplay === EARLY_EXIT_REPLAY_ALLOWED)  // last two play allow early exit
         $('#early-exit-instruction').animate({opacity: 1}, 400)
@@ -156,13 +159,23 @@ function gameOver(time, x, width, difficulty, earlyExit) {
         x,
         width,
         difficulty,
+		  all_emotions,
+		  all_difficulty,
         earlyExit,
     })
+	 all_emotions = []
+	 all_difficulty = []
 
     // reached number of replays or bored
     if (gameReplay === GAME_REPLAYS[gameVariant - 1] || earlyExit) {
         gameInstance.SendMessage('Main Camera', 'SetKeyboardCapture', 0)
         showRatings()
+
+		  toggleVideo(false)
+		  if (gameVariant === 1) { // Calculate baseline
+		  	 	au_baseline = math.mean(math.matrix(au_baseline), 0)
+				emo_baseline = auMapping(au_baseline)
+		  }
     }
     gameReplay++
 }

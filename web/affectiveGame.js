@@ -16,7 +16,7 @@ const UPLOAD_INTERVAL = 300
 const DIFF_INTERVAL = 500
 
 var sendImageTimer = undefined
-var auTimer = undefined
+var ddaTimer = undefined
 
 var emo_baseline = []
 var au_baseline = [] 
@@ -29,32 +29,34 @@ var delta = [45, 55]
 
 $(document).keypress(function(e){
 	if(e.keyCode == 32){
-		delta = [math.max([cur_difficulty - MAX_DELTA, 10]), math.min([cur_difficulty + MAX_DELTA, 100])]
+		delta = [math.max([cur_difficulty - MAX_DELTA, 0]), math.min([cur_difficulty + MAX_DELTA, 100])]
 	}
 });
 
 function toggleVideo(enabled){
 	video = document.querySelector("#videoElement")
 
-	if (navigator.mediaDevices.getUserMedia && enabled && gameVariant < 5) {       
+	if (navigator.mediaDevices.getUserMedia && enabled) {       
 			navigator.mediaDevices.getUserMedia({video: true})
 			.then(function(stream) {
 				$("#webcamToggle").get(0).checked = true
 			  video.srcObject = stream
 				sendImageTimer = setInterval(sendImage, UPLOAD_INTERVAL)
-				auTimer = setInterval(handleAU, DIFF_INTERVAL)
+				ddaTimer = setInterval(dynamicDifficulty, DIFF_INTERVAL)
 			  console.log("Webcam enabled")
 			})
 			.catch(function(err0r) {
+				$("#webcamToggle").get(0).checked = false
 			  console.log("Something went wrong!")
 			  console.log(err0r)
+			  alert("Error occured when initializing webcam!")
 			})
 	} else {
 	  $("#webcamToggle").get(0).checked = false
 		video.srcObject.getTracks().forEach(track => track.stop())
 		$("#capturedImage").attr('src', 'images/defaultuser.png') 
 		clearInterval(sendImageTimer)
-		clearInterval(auTimer)
+		clearInterval(ddaTimer)
 	}
 }
 
@@ -93,43 +95,61 @@ function handleMsg(msg){
 	}
 }
 
-function handleAU(){
+function dynamicDifficulty(){
 	if (gameVariant === AFF_ADAPTIVE) {
-		var au = math.subtract(math.matrix(au_current), au_baseline)
-		var emotions = auMapping(au)
-		var	emotion = argMax(emotions)
+		auInc = facialAdjust()
+		hrInc = physioAdjust()
+		baseInc = baseAdjust()
 
-		if (emotion === HAPPINESS) {
-			if (cur_difficulty + 5 < delta[1]){
-				cur_difficulty = cur_difficulty + 5
-			}
-		} else if(emotion === SURPRISE) {
-			if (cur_difficulty + 2 < delta[1]){
-				cur_difficulty = cur_difficulty + 2
-			}
-		} else if (emotion === ANGER || emotion === SADNESS){
-			if (cur_difficulty - 2 > delta[0]){
-				cur_difficulty = cur_difficulty - 2
-			}
-		} else if (emotion === DISGUST ){
-			if (cur_difficulty - 1 > delta[0]){
-				cur_difficulty = cur_difficulty - 1
-			}
-		} else {
-			if (cur_difficulty + 1 < delta[1]){
-				cur_difficulty = cur_difficulty + 1
-			}
-		}
-		console.log(EMOTXT[emotion])
+		cur_difficulty = clip(cur_difficulty + auInc + hrInc + baseInc)
+		console.log([cur_difficulty, auInc, baseInc])
 	  all_difficulty.push(cur_difficulty)
+
     gameInstance.SendMessage('Difficulty', 'SetDifficulty', cur_difficulty)
 	} else if (gameVariant === CLS_ADAPTIVE) {
-			if (cur_difficulty + 1 < delta[1]){
-				cur_difficulty = cur_difficulty + 1
+			diff_increase = math.randomInt(6) - 3
+			if (cur_difficulty + diff_increase <= delta[1] && cur_difficulty + diff_increase >= delta[0]){
+				cur_difficulty = cur_difficulty + diff_increase
 			}
 	  all_difficulty.push(cur_difficulty)
     gameInstance.SendMessage('Difficulty', 'SetDifficulty', cur_difficulty)
 	}
+}
+
+function baseAdjust() {
+	if (cur_difficulty >= 85) return -4
+	if (cur_difficulty >= 60) return -2
+	if (cur_difficulty <= 15) return 4
+	if (cur_difficulty <= 40) return 2
+	return 1
+}
+
+function facialAdjust() {
+	var au = math.subtract(math.matrix(au_current), au_baseline)
+	var emotions = auMapping(au)
+	var	emotion = argMax(emotions)
+	console.log(EMOTXT[emotion])
+
+	switch(emotion) {
+	case HAPPINESS :
+			return math.floor((100-cur_difficulty) / 10 )
+	case SADNESS :
+			return math.floor((100-cur_difficulty) / 10 * 0.5)
+	case SURPRISE :
+			return math.floor((100-cur_difficulty) / 10 * 0.75)
+	case FEAR :
+			return math.floor(cur_difficulty / -10 * 0.5)
+	case ANGER :
+			return math.floor(cur_difficulty / -10 * 0.75)
+	case DISGUST :
+			return math.floor(cur_difficulty / -10 * 0.8)
+	default:
+			return 0
+	}
+}
+
+function physioAdjust() {
+	return 0 
 }
 
 function auMapping(arr) {
@@ -159,5 +179,9 @@ function auMapping(arr) {
 
 function argMax(array) {
   return array.map((x, i) => [x, i]).reduce((r, a) => (a[0] > r[0] ? a : r))[1]
+}
+
+function clip(x) {
+	return math.max( math.min(x, delta[1]), delta[0])
 }
 

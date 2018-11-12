@@ -52,7 +52,7 @@
      
    } else {
 	  $csvdata = array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
-		$myObj->img = 0;
+		$myObj->img = 'images/defaultuser.png';
 		$myObj->fau = $csvdata;
 		$myJSON = json_encode($myObj);
 		echo $myJSON;

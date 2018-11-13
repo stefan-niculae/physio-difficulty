@@ -92,6 +92,7 @@ let saveIntroInfo = () => {
         skill:       $('#skill-rating')      .rating('get rating'),
         competitive: $('#competitive-rating').rating('get rating'),
     })
+    user_skill = $('#skill-rating').rating('get rating')
 }
 
 let showRatings = () => {
@@ -145,7 +146,8 @@ function gameLoaded() {
     gameInstance.SendMessage('Difficulty', 'SetDifficulty', INITIAL_DIFFICULTY[gameVariant - 1])
     cur_difficulty = INITIAL_DIFFICULTY[gameVariant - 1]
     start_difficulty = INITIAL_DIFFICULTY[gameVariant - 1]
-	 delta = [start_difficulty - 10, start_difficulty+10]
+    delta = [math.max([cur_difficulty - MAX_DELTA - user_skill, 0]), math.min([cur_difficulty + MAX_DELTA + user_skill, 100])]
+	 game_running = true
 
     if (gameVariant >= 3 && gameReplay === EARLY_EXIT_REPLAY_ALLOWED)  // last two play allow early exit
         $('#early-exit-instruction').animate({opacity: 1}, 400)
@@ -165,13 +167,14 @@ function gameOver(time, x, width, difficulty, earlyExit) {
     })
 	 all_emotions = []
 	 all_difficulty = []
+	 game_running = false
 
     // reached number of replays or bored
     if (gameReplay === GAME_REPLAYS[gameVariant - 1] || earlyExit) {
         gameInstance.SendMessage('Main Camera', 'SetKeyboardCapture', 0)
         showRatings()
 
-		  toggleVideo(false)
+		  // toggleVideo(false)
 		  if (gameVariant === 1) { // Calculate baseline
 		  	 	au_baseline = math.mean(math.matrix(au_baseline), 0)
 				emo_baseline = auMapping(au_baseline)

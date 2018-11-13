@@ -83,7 +83,7 @@
       <p id="early-exit-instruction">Press <b>X</b> when you'd like to advance.</p>
     </div>
 
-	  <div class="ui floated segment" style="margin-left:1em">
+	  <div class="ui floated segment" style="margin-left:1em; display:none">
 			<div class="ui items">
 				<div class="item">
 				  <div class="ui small image" style="min-width:150px;min-height:150px;width:150px;height:150px;">
@@ -94,6 +94,12 @@
 				<div class="ui floated toggle checkbox">
 				  <input id='webcamToggle' type="checkbox" name="public" onchange="toggleVideo(this.checked)">
 				  <label>Webcam</label>
+				</div>
+			</div>
+			<div class="item">
+				<div class="ui floated toggle checkbox">
+				  <input id='displayToggle' type="checkbox" name="public">
+				  <label>Display</label>
 				</div>
 			</div>
 		</div>
@@ -175,7 +181,7 @@
           </p>
         </div>
 
-        <button class="ui primary button" type="submit" onclick='if (gameVariant < 5) toggleVideo(true)'>Next</button>
+        <button class="ui primary button" type="submit" onclick='if (gameVariant > 5) toggleVideo(true)'>Next</button>
       </form>
 
 
@@ -229,7 +235,7 @@
 
 
     </div>
-		<div id="container" style="visibility:hidden;">
+		<div id="container" style="display:none;">
 		    <video autoplay="true" id="videoElement">
 		    </video>
 		</div>

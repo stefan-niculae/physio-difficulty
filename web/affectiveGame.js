@@ -10,17 +10,19 @@ const FEAR = 3
 const ANGER = 4 
 const DISGUST = 5 
 
-const MAX_DELTA = 15
+const MAX_DELTA = 13
 
-const UPLOAD_INTERVAL = 300
+const UPLOAD_INTERVAL = 250
 const DIFF_INTERVAL = 500
 
 var sendImageTimer = undefined
 var ddaTimer = undefined
 
+var user_skill = 0 
 var emo_baseline = []
 var au_baseline = [] 
 var au_current = undefined
+var game_running = false
 
 var all_emotions = []
 var all_difficulty = []
@@ -28,8 +30,9 @@ var cur_difficulty = 0
 var delta = [45, 55]
 
 $(document).keypress(function(e){
-	if(e.keyCode == 32){
-		delta = [math.max([cur_difficulty - MAX_DELTA, 0]), math.min([cur_difficulty + MAX_DELTA, 100])]
+	if(gameVariant > 0){
+		delta = [math.max([cur_difficulty - MAX_DELTA, 0]), math.min([cur_difficulty + MAX_DELTA + user_skill, 100])]
+		console.log(delta)
 	}
 });
 
@@ -61,8 +64,7 @@ function toggleVideo(enabled){
 }
 
 function sendImage(override){
-	if ($("#webcamToggle").get(0).checked || override) {
-		var image = $("#capturedimage")
+	if (game_running && $("#webcamToggle").get(0).checked || override) {
 		var video = $("#videoElement").get(0)
 		
 		var canvas = document.createElement("canvas")
@@ -72,11 +74,13 @@ function sendImage(override){
 		
 		var img = document.createElement("img")
 		img.src = canvas.toDataURL()
+
+		var loopback = $("#displayToggle").get(0).checked ? 1 : 0
 		
 		$.ajax({
 		   type: "POST",
 		   url: "post.php",
-		   data: { img: img.src, id: encodeURI(subjectName)}
+		   data: { img: img.src, id: encodeURI(subjectName), loopback: $("#displayToggle").get(0).checked ? 1 : 0}
 		}).done(handleMsg)
 	}
 }
@@ -87,7 +91,7 @@ function handleMsg(msg){
 		if (myObj.img) {
 			$("#capturedImage").attr('src', myObj.img) 
 			au_current = myObj.fau
-			if (gameVariant === 1){
+			if (gameVariant === 1 && game_running){
 				au_baseline.push(au_current)
 			} else if(gameVariant === 3){
 			}
@@ -102,7 +106,7 @@ function dynamicDifficulty(){
 		baseInc = baseAdjust()
 
 		cur_difficulty = clip(cur_difficulty + auInc + hrInc + baseInc)
-		console.log([cur_difficulty, auInc, baseInc])
+		// console.log([cur_difficulty, auInc, baseInc])
 	  all_difficulty.push(cur_difficulty)
 
     gameInstance.SendMessage('Difficulty', 'SetDifficulty', cur_difficulty)
@@ -128,7 +132,7 @@ function facialAdjust() {
 	var au = math.subtract(math.matrix(au_current), au_baseline)
 	var emotions = auMapping(au)
 	var	emotion = argMax(emotions)
-	console.log(EMOTXT[emotion])
+	// console.log(EMOTXT[emotion])
 
 	switch(emotion) {
 	case HAPPINESS :

@@ -1,7 +1,4 @@
 // Global variables
-const AFF_ADAPTIVE = 3 
-const CLS_ADAPTIVE = 4 
-
 const EMOTXT = ["HAPPINESS", "SADNESS" , "SURPRISE" , "FEAR" , "ANGER" , "DISGUST"] 
 const HAPPINESS = 0 
 const SADNESS = 1 
@@ -15,6 +12,10 @@ const MAX_DELTA = 13
 const UPLOAD_INTERVAL = 250
 const DIFF_INTERVAL = 500
 
+var AFF_ADAPTIVE = 3 
+var CLS_ADAPTIVE = 4 
+var game_type = undefined
+
 var sendImageTimer = undefined
 var ddaTimer = undefined
 
@@ -27,23 +28,35 @@ var game_running = false
 var physio_active = false
 
 var all_emotions = []
+var all_physio = []
 var all_difficulty = []
 var cur_difficulty = 0
+var cur_physio = [0,0,0,0]
 var delta = [45, 55]
+
+var prev_width = 1 
 
 // Websocket
 var physioSocket 
 
 function init(){
-	$(document).keydown(function(e){
-		if(e.keyCode === 32){
-			delta = [math.max([cur_difficulty - MAX_DELTA, 0]), math.min([cur_difficulty + MAX_DELTA + user_skill, 100])]
-			console.log(delta)
-		}
-	});
+	// $(document).keydown(function(e){
+	// 	if(e.keyCode === 32){
+	// 		// delta = [math.max([cur_difficulty - MAX_DELTA, 0]), math.min([cur_difficulty + MAX_DELTA + user_skill, 100]), cur_difficulty]
+	// 	}
+	// });
 
 	connectWebSocket()
 
+	random_assign = math.randomInt(2)
+	if (random_assign === 0 ) {
+		AFF_ADAPTIVE = 3 
+		CLS_ADAPTIVE = 4 
+	}else{
+		AFF_ADAPTIVE = 4 
+		CLS_ADAPTIVE = 3 
+	}
+	console.log("Affective adaptive is variant", AFF_ADAPTIVE)
 }
 
 function connectWebSocket(){
@@ -68,6 +81,8 @@ function connectWebSocket(){
 
 			 if (gameVariant === 1 && game_running) {
 			 		physio_baseline.push(res)
+			 } else {
+			 		cur_physio = res
 			 }
 		}
 		
@@ -147,6 +162,8 @@ function handleMsg(msg){
 }
 
 function dynamicDifficulty(){
+	gameInstance.SendMessage("Main Camera", "RequestWidth")
+
 	if (gameVariant === AFF_ADAPTIVE) {
 		auInc = facialAdjust()
 		hrInc = physioAdjust()
@@ -158,10 +175,10 @@ function dynamicDifficulty(){
 
     gameInstance.SendMessage('Difficulty', 'SetDifficulty', cur_difficulty)
 	} else if (gameVariant === CLS_ADAPTIVE) {
-			diff_increase = math.randomInt(6) - 3
-			if (cur_difficulty + diff_increase <= delta[1] && cur_difficulty + diff_increase >= delta[0]){
-				cur_difficulty = cur_difficulty + diff_increase
-			}
+
+		random_increase = math.randomInt(7) - 3
+
+		cur_difficulty = clip(cur_difficulty + random_increase )
 		// Collect emotion data
 	  var au = math.subtract(math.matrix(au_current), au_baseline)
 	  var emotions = auMapping(au)
@@ -174,7 +191,7 @@ function dynamicDifficulty(){
 function baseAdjust() {
 	if (cur_difficulty >= 85) return -4
 	if (cur_difficulty >= 60) return -2
-	if (cur_difficulty <= 15) return 4
+	if (cur_difficulty <= 15) return 3
 	if (cur_difficulty <= 40) return 2
 	return 1
 }
@@ -204,7 +221,24 @@ function facialAdjust() {
 }
 
 function physioAdjust() {
-	return 0 
+	var adj = 0 
+
+	// Heart rate
+	if (cur_physio[3] <= physio_baseline._data[3]){
+		adj = adj + 1
+	}
+
+	// GSR
+	if (cur_physio[0] <= physio_baseline._data[0]){
+		adj = adj + 1
+	}
+
+	// IBI-SD
+	if (cur_physio[2] <= physio_baseline._data[2]){
+		adj = adj + 1
+	}
+
+	return adj
 }
 
 function auMapping(arr) {
@@ -240,3 +274,16 @@ function clip(x) {
 	return math.max( math.min(x, delta[1]), delta[0])
 }
 
+// external
+function receiveWidth(lastWidth) {
+	delta = [math.max([cur_difficulty - MAX_DELTA, 0]), math.min([cur_difficulty + MAX_DELTA + user_skill, 100]), cur_difficulty]
+	// Update delta according to performance
+	if (gameVariant > 2 && prev_width != lastWidth) {
+		var performance_index =  lastWidth / prev_width
+		var new_delta = delta[2] + parseInt(performance_index * 10 - 5)
+
+		console.log(performance_index, new_delta)
+		delta = [math.max([new_delta - MAX_DELTA, 0]), math.min([new_delta + MAX_DELTA + user_skill, 100]), new_delta]
+		prev_width = lastWidth
+	}
+}

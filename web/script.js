@@ -76,6 +76,24 @@ let advance = () => {
         $('#outro-form').show()
 
     gameVariant++
+	 switch(gameVariant) {
+	 	case 1 : 
+			game_type = 'Easy'
+			break;
+	 	case 2 : 
+			game_type = 'Hard'
+			break;
+	 	case CLS_ADAPTIVE : 
+			game_type = 'Classical'
+			break;
+	 	case AFF_ADAPTIVE : 
+			game_type = 'Affective'
+			break;
+		default :
+			game_type = "Undefined"
+			break;
+	 }
+
 
     // update steps at the top
     const steps = $('.step')
@@ -145,8 +163,9 @@ function gameLoaded() {
     gameInstance.SendMessage('Difficulty', 'SetDifficulty', INITIAL_DIFFICULTY[gameVariant - 1])
     cur_difficulty = INITIAL_DIFFICULTY[gameVariant - 1]
     start_difficulty = INITIAL_DIFFICULTY[gameVariant - 1]
-	 delta = [start_difficulty - 10, start_difficulty+10]
+	 delta = [start_difficulty - 10, start_difficulty+10, start_difficulty]
 	 game_running = true
+	 prev_width = 1
 
     if (gameVariant >= 3 && gameReplay === EARLY_EXIT_REPLAY_ALLOWED)  // last two play allow early exit
         $('#early-exit-instruction').animate({opacity: 1}, 400)
@@ -161,10 +180,14 @@ function gameOver(time, x, width, difficulty, earlyExit) {
         width,
         difficulty,
 		  all_emotions,
+		  all_physio,
 		  all_difficulty,
         earlyExit,
+		  game_type,
+		  physio_active,
     })
 	 all_emotions = []
+	 all_physio = []
 	 all_difficulty = []
 	 game_running = false
 
@@ -178,7 +201,11 @@ function gameOver(time, x, width, difficulty, earlyExit) {
 		  		console.log("Calculate baseline")
 		  	 	au_baseline = math.mean(math.matrix(au_baseline), 0)
 				emo_baseline = auMapping(au_baseline)
-				physio_baseline = math.mean(math.matrix(physio_baseline), 0)
+				if (physio_active) {
+					physio_baseline = math.mean(math.matrix(physio_baseline), 0)
+				} else {
+					physio_baseline = math.matrix([0,0,0,0])
+				}
 		  }
     }
     gameReplay++

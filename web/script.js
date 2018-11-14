@@ -92,7 +92,6 @@ let saveIntroInfo = () => {
         skill:       $('#skill-rating')      .rating('get rating'),
         competitive: $('#competitive-rating').rating('get rating'),
     })
-    user_skill = $('#skill-rating').rating('get rating')
 }
 
 let showRatings = () => {
@@ -146,7 +145,7 @@ function gameLoaded() {
     gameInstance.SendMessage('Difficulty', 'SetDifficulty', INITIAL_DIFFICULTY[gameVariant - 1])
     cur_difficulty = INITIAL_DIFFICULTY[gameVariant - 1]
     start_difficulty = INITIAL_DIFFICULTY[gameVariant - 1]
-    delta = [math.max([cur_difficulty - MAX_DELTA - user_skill, 0]), math.min([cur_difficulty + MAX_DELTA + user_skill, 100])]
+	 delta = [start_difficulty - 10, start_difficulty+10]
 	 game_running = true
 
     if (gameVariant >= 3 && gameReplay === EARLY_EXIT_REPLAY_ALLOWED)  // last two play allow early exit
@@ -176,8 +175,10 @@ function gameOver(time, x, width, difficulty, earlyExit) {
 
 		  // toggleVideo(false)
 		  if (gameVariant === 1) { // Calculate baseline
+		  		console.log("Calculate baseline")
 		  	 	au_baseline = math.mean(math.matrix(au_baseline), 0)
 				emo_baseline = auMapping(au_baseline)
+				physio_baseline = math.mean(math.matrix(physio_baseline), 0)
 		  }
     }
     gameReplay++

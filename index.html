@@ -37,7 +37,7 @@
     <script src="web/script.js"></script>
 
   </head>
-  <body>
+  <body onload="init()">
     <!-- steps progress -->
     <div class="ui above container">
 
@@ -83,7 +83,7 @@
       <p id="early-exit-instruction">Press <b>X</b> when you'd like to advance.</p>
     </div>
 
-	  <div class="ui floated segment" style="margin-left:1em; display:none">
+	  <div id="webcamWindow" class="ui floated segment" style="margin-left:1em; position: absolute;">
 			<div class="ui items">
 				<div class="item">
 				  <div class="ui small image" style="min-width:150px;min-height:150px;width:150px;height:150px;">
@@ -91,7 +91,7 @@
 					</div>
 				</div>
 			<div class="item">
-				<div class="ui floated toggle checkbox">
+				<div class="ui floated left toggle checkbox">
 				  <input id='webcamToggle' type="checkbox" name="public" onchange="toggleVideo(this.checked)">
 				  <label>Webcam</label>
 				</div>

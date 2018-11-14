@@ -21,20 +21,67 @@ var ddaTimer = undefined
 var user_skill = 0 
 var emo_baseline = []
 var au_baseline = [] 
+var physio_baseline = []
 var au_current = undefined
 var game_running = false
+var physio_active = false
 
 var all_emotions = []
 var all_difficulty = []
 var cur_difficulty = 0
 var delta = [45, 55]
 
-$(document).keypress(function(e){
-	if(gameVariant > 0){
-		delta = [math.max([cur_difficulty - MAX_DELTA, 0]), math.min([cur_difficulty + MAX_DELTA + user_skill, 100])]
-		console.log(delta)
+// Websocket
+var physioSocket 
+
+function init(){
+	$(document).keydown(function(e){
+		if(e.keyCode === 32){
+			delta = [math.max([cur_difficulty - MAX_DELTA, 0]), math.min([cur_difficulty + MAX_DELTA + user_skill, 100])]
+			console.log(delta)
+		}
+	});
+
+	connectWebSocket()
+
+}
+
+function connectWebSocket(){
+  try {
+		physioSocket = new WebSocket("ws://localhost:9998/echo")
+		
+		physioSocket.onopen = function() {
+		   // Web Socket is connected
+		   console.log("Websocket is connected")
+			 physio_active = true
+		}
+		
+		physioSocket.onmessage = function (evt) { 
+			 // Message : GSR, IBI-Mean, IBI-Variance, HR-Mean samples at 4Hz
+		   var received_msg = evt.data;
+			 var res = received_msg.split(",")
+
+			 res.forEach(function(element, i){
+			 		res[i] = parseFloat(element)
+			 })
+		   console.log(res)
+
+			 if (gameVariant === 1 && game_running) {
+			 		physio_baseline.push(res)
+			 }
+		}
+		
+		physioSocket.onclose = function() { 
+		   // Web Socket is closed.
+		   console.log("Connection is closed...")
+			 physio_active = false
+		}
 	}
-});
+	catch(err) {
+		physio_active = false
+		consol.log("Can't connect to physio Web Socket")
+	}
+}
 
 function toggleVideo(enabled){
 	video = document.querySelector("#videoElement")
@@ -89,7 +136,7 @@ function handleMsg(msg){
 	if ($("#webcamToggle").get(0).checked) {
 		var myObj = JSON.parse(msg)
 		if (myObj.img) {
-			$("#capturedImage").attr('src', myObj.img) 
+			if ($("#displayToggle").get(0).checked) $("#capturedImage").attr('src', myObj.img) 
 			au_current = myObj.fau
 			if (gameVariant === 1 && game_running){
 				au_baseline.push(au_current)
@@ -115,6 +162,10 @@ function dynamicDifficulty(){
 			if (cur_difficulty + diff_increase <= delta[1] && cur_difficulty + diff_increase >= delta[0]){
 				cur_difficulty = cur_difficulty + diff_increase
 			}
+		// Collect emotion data
+	  var au = math.subtract(math.matrix(au_current), au_baseline)
+	  var emotions = auMapping(au)
+
 	  all_difficulty.push(cur_difficulty)
     gameInstance.SendMessage('Difficulty', 'SetDifficulty', cur_difficulty)
 	}

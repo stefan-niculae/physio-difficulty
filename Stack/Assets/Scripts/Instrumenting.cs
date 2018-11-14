@@ -61,4 +61,10 @@ public class Instrumenting : MonoBehaviour
     public void SetKeyboardCapture(int status) {
         WebGLInput.captureAllKeyboardInput = (status == 1);
     }
+
+    // external
+    public void RequestWidth() {
+        float lastWidth = dropWidths.Count == 0 ? -1 : dropWidths[dropWidths.Count - 1];
+        Application.ExternalCall("receiveWidth", lastWidth);
+    }
 }

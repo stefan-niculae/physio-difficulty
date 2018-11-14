@@ -21,13 +21,8 @@ public class Score : MonoBehaviour {
 	}
 
     // call from js: gameInstance.SendMessage("Score", "RequestScore");
+    // in js: global function receiveScore(amount) { ... 
     public void RequestScore()
-    {
-        SendScore(); // hard to do it synchronously easily
-    }
-
-    // in js: global function receiveScore(amount) { ... }
-    void SendScore()
     {
         Application.ExternalCall("receiveScore", amount);
     }

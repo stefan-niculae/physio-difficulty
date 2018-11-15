@@ -9,7 +9,7 @@ const DISGUST = 5
 
 const MAX_DELTA = 13
 
-const UPLOAD_INTERVAL = 250
+const UPLOAD_INTERVAL = 400
 const DIFF_INTERVAL = 500
 
 var AFF_ADAPTIVE = 3 
@@ -74,10 +74,17 @@ function connectWebSocket(){
 		   var received_msg = evt.data;
 			 var res = received_msg.split(",")
 
+
 			 res.forEach(function(element, i){
 			 		res[i] = parseFloat(element)
 			 })
-		   console.log(res)
+
+			 if (res.length != 4) {
+			 		return
+			 }
+
+		   //console.log(res)
+		   all_physio.push(res)
 
 			 if (gameVariant === 1 && game_running) {
 			 		physio_baseline.push(res)
@@ -91,11 +98,11 @@ function connectWebSocket(){
 		   console.log("Connection is closed...")
 			 physio_active = false
 		}
-	}
+	} // End try
 	catch(err) {
 		physio_active = false
 		consol.log("Can't connect to physio Web Socket")
-	}
+	} // End catch
 }
 
 function toggleVideo(enabled){
@@ -224,12 +231,12 @@ function physioAdjust() {
 	var adj = 0 
 
 	// Heart rate
-	if (cur_physio[3] <= physio_baseline._data[3]){
+	if (parseInt(cur_physio[3]) <= parseInt(physio_baseline._data[3])){
 		adj = adj + 1
 	}
 
 	// GSR
-	if (cur_physio[0] <= physio_baseline._data[0]){
+	if (parseInt(cur_physio[0]) <= parseInt(physio_baseline._data[0])){
 		adj = adj + 1
 	}
 
@@ -276,9 +283,10 @@ function clip(x) {
 
 // external
 function receiveWidth(lastWidth) {
-	delta = [math.max([cur_difficulty - MAX_DELTA, 0]), math.min([cur_difficulty + MAX_DELTA + user_skill, 100]), cur_difficulty]
 	// Update delta according to performance
 	if (gameVariant > 2 && prev_width != lastWidth) {
+	  delta = [math.max([cur_difficulty - MAX_DELTA, 0]), math.min([cur_difficulty + MAX_DELTA + user_skill, 100]), cur_difficulty]
+
 		var performance_index =  lastWidth / prev_width
 		var new_delta = delta[2] + parseInt(performance_index * 10 - 5)
 

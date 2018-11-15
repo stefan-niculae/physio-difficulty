@@ -5,8 +5,8 @@ let gameReplay = undefined  // starts from 1
 
 const DATABASE = firebase.database()
 
-const GAME_REPLAYS = [1, 1, 20, 20] // how many times each variant will be played
-const INITIAL_DIFFICULTY = [30, 80, 55, 65]
+const GAME_REPLAYS = [2, 2, 10, 10] // how many times each variant will be played
+const INITIAL_DIFFICULTY = [10, 80, 40, 40]
 const EARLY_EXIT_REPLAY_ALLOWED = 4
 
 gameInstance = UnityLoader.instantiate('game', 'Stack/web-build/Build/web-build.json')

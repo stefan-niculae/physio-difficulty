@@ -18,7 +18,8 @@
    
       if (file_put_contents($file, $data)) {
 			// $cmd = '/var/www/cgi-bin/OpenFace/build/bin/FaceLandmarkImg -mloc /var/www/cgi-bin/OpenFace/build/bin/model/main_clm_general.txt -q -f ' . $file;
-			$cmd = '/var/www/cgi-bin/OpenFace/build/bin/FaceLandmarkImg -mloc /var/www/cgi-bin/OpenFace/build/bin/model/main_clnf_multi_pie.txt -aus -tracked -q -out_dir processed/'.$id.' -f '.$file;
+			// $cmd = '/var/www/cgi-bin/OpenFace/build/bin/FaceLandmarkImg -mloc /var/www/cgi-bin/OpenFace/build/bin/model/main_clnf_multi_pie.txt -aus -tracked -q -out_dir processed/'.$id.' -f '.$file;
+			$cmd = '/var/www/cgi-bin/OpenFace/build/bin/FaceLandmarkImg -mloc /var/www/cgi-bin/OpenFace/build/bin/model/main_clm_general.txt -aus -tracked -q -out_dir processed/'.$id.' -f '.$file;
 			shell_exec($cmd);
 
 			$path = 'processed/'.$id.'/'.$filename.'.jpg';

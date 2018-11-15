@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Instrumenting : MonoBehaviour 
+public class Instrumenting : MonoBehaviour
 {
     public Difficulty difficulty;
 
@@ -13,6 +13,13 @@ public class Instrumenting : MonoBehaviour
     List<float> dropXs = new List<float>();
     List<float> dropWidths = new List<float>();
     List<int> dropDifficulties = new List<int>();
+
+    string[] COLORS = {
+        "#078213", // green
+        "#D23E33", // brick red
+        "#9855CF", // violet
+        "#3EA6EE" // light blue
+    };
 
 
     void Start()
@@ -45,7 +52,7 @@ public class Instrumenting : MonoBehaviour
         dropWidths.Add(width / originalWidth);
     }
 
-    public void ReportGame(bool earlyExit=false)
+    public void ReportGame(bool earlyExit = false)
     {
         Application.ExternalCall("gameOver", new object[] {
             dropTimes.ToArray(),  // the total time is difference between the last and the first
@@ -58,13 +65,24 @@ public class Instrumenting : MonoBehaviour
     }
 
     // external
-    public void SetKeyboardCapture(int status) {
+    public void SetKeyboardCapture(int status)
+    {
         WebGLInput.captureAllKeyboardInput = (status == 1);
     }
 
     // external
-    public void RequestWidth() {
+    public void RequestWidth()
+    {
         float lastWidth = dropWidths.Count == 0 ? -1 : dropWidths[dropWidths.Count - 1];
         Application.ExternalCall("receiveWidth", lastWidth);
     }
+
+    // external
+    public void SetColor(int index)
+    {
+        Color color;
+        ColorUtility.TryParseHtmlString(COLORS[index], out color);
+        Camera.main.backgroundColor = color;
+    }
 }
+    

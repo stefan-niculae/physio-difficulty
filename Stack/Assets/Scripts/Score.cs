@@ -3,12 +3,12 @@ using UnityEngine.UI;
 
 public class Score : MonoBehaviour {
 
-    int _amount;
-    public int amount {
+    float _amount;
+    public float amount {
         get { return _amount; }
         set {
             _amount = value;
-            textComponent.text = amount.ToString();
+            textComponent.text = amount.ToString("0.00");
         }
     }
 

@@ -5,16 +5,11 @@ let gameReplay = undefined  // starts from 1
 
 const DATABASE = firebase.database()
 
-const GAME_REPLAYS = [2, 2, 10, 10] // how many times each variant will be played
-const INITIAL_DIFFICULTY = [10, 80, 40, 40]
+const GAME_REPLAYS = [1, 3, 10, 10] // how many times each variant will be played
+const INITIAL_DIFFICULTY = [0, 100, 30, 30]
 const EARLY_EXIT_REPLAY_ALLOWED = 4
 
 gameInstance = UnityLoader.instantiate('game', 'Stack/web-build/Build/web-build.json')
-gameInstance.sendMessage = function() {
-    print('sending', arguments)
-    gameInstance.sendMessage(arguments)
-}
-
 
 $(() => {
     $('.rating').rating({
@@ -51,6 +46,11 @@ let enableSubmitAfterRating = () => {
 let forceHide = (selector) => {
     // $::hide(), setting display:none gets overwritten by semantic style
     $(selector)[0].style.setProperty('display', 'none', 'important')
+}
+
+let hideFirstInstructions = () => {
+    forceHide('#first-instructions');
+    $('#intro-form').show();
 }
 
 let advance = () => {
@@ -159,8 +159,8 @@ function gameLoaded() {
         return
     }
 
-    // TODO replace with non-dummy difficulty setting
     gameInstance.SendMessage('Difficulty', 'SetDifficulty', INITIAL_DIFFICULTY[gameVariant - 1])
+    gameInstance.SendMessage('Main Camera', 'SetColor', gameVariant - 1)
     cur_difficulty = INITIAL_DIFFICULTY[gameVariant - 1]
     start_difficulty = INITIAL_DIFFICULTY[gameVariant - 1]
 	 delta = [start_difficulty - 10, start_difficulty+10, start_difficulty]

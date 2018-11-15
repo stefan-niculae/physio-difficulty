@@ -5,11 +5,11 @@ using UnityEngine.UI;
 public class Difficulty : MonoBehaviour
 {
 
-    public Vector2 platformSpeedRange = new Vector2(1, 10);
-    public Vector2 platformDistanceRange = new Vector2(.5f, 4f);
+    public Vector2 platformSpeedRange = new Vector2(.5f, 5);
+    public Vector2 platformDistanceRange = new Vector2(.5f, 2f);
 
     public float platformSpeed = 3;
-    public float platformDistance = 3.5f;
+    public float platformDistance = 2f;
 
     int _amount;
     public int amount {
@@ -19,8 +19,8 @@ public class Difficulty : MonoBehaviour
             _amount = value;
 
             textComponent.text = "Difficulty: " + value;
-            platformSpeed    = platformSpeedRange.x +    (platformSpeedRange.y - platformSpeedRange.x)       * value / 100;
-            platformDistance = platformDistanceRange.x + (platformDistanceRange.y - platformDistanceRange.x) * value / 100;
+            platformSpeed    = platformSpeedRange.x +    (platformSpeedRange.y - platformSpeedRange.x)       * (value / 100f);
+            platformDistance = platformDistanceRange.x + (platformDistanceRange.y - platformDistanceRange.x) * (value / 100f);
         }
     }
 

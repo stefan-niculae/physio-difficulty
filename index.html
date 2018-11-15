@@ -37,7 +37,7 @@
     <script src="web/script.js"></script>
 
   </head>
-  <body onload="init()">
+  <body onload="init(); toggleVideo(true);">
     <!-- steps progress -->
     <div class="ui above container">
 
@@ -51,25 +51,25 @@
 
         <div class="disabled step">
           <div class="content">
-            <div class="description">Game<br>Static A</div>
+            <div class="description">Green<br>Game</div>
           </div>
         </div>
 
         <div class="disabled step">
           <div class="content">
-            <div class="description">Game<br>Static B</div>
+            <div class="description">Red<br>Game</div>
           </div>
         </div>
 
         <div class="disabled step">
           <div class="content">
-            <div class="description">Game<br>Adaptive A</div>
+            <div class="description">Violet<br>Game</div>
           </div>
         </div>
 
         <div class="disabled step">
           <div class="content">
-            <div class="description">Game<br>Adaptive B</div>
+            <div class="description">Blue<br>Game</div>
           </div>
         </div>
 
@@ -115,8 +115,22 @@
           <!--<div class="ui text loader"></div>-->
         <!--</div>-->
 
+      <form onsubmit="hideFirstInstructions(); return false" id="first-instructions">
+        <p>Welcome!</p>
+        <p>You will play a game while wearing a watch and being filmed.</p>
+        <br><br>
+        <p><b>Game</b>: stack platforms on top of each-other, as many and as neatly as you can.</p>
+        <p><b>Scoring</b>: the higher the difficulty, the larger the reward.</p>
+        <br><br>
+        <p><b>Setup</b>: you will play 4 versions (indicated by the strip at the top).</p>
+        <p><b>Feedback</b>: you will rate each version after you play it. At the end, you will pick your favorite (so try to remember them).</p>
+        <br><br><br><br>
+        <button class="ui primary button" type="submit">Got it</button>
+      </form>
+
       <form id="intro-form" class="ui form"
             onsubmit="advance(); return false"
+            style="display: none !important;"
       >
         <p class="instructions">Preliminary info about yourself:</p>
 
@@ -129,23 +143,20 @@
         <div class="field">
           <p>How skilled are you at video-games?</p>
           <div id="skill-rating" class="ui massive star rating" data-rating="0" data-max-rating="5"></div>
-          <!--<p class="rating-desc">-->
-            <!--<span class="left">unskilled</span>-->
-            <!--<span class="right">skilled</span>-->
-          <!--</p>-->
+          <p class="rating-desc">
+          </p>
         </div>
 
         <div class="field">
           <p>How competitive are you, in general?</p>
           <div id="competitive-rating" class="ui massive star rating" data-rating="0" data-max-rating="5"></div>
-          <!--<p class="rating-desc">-->
-            <!--<span class="left">non-comp.</span>-->
-            <!--<span class="right">competitive</span>-->
-          <!--</p>-->
+          <p class="rating-desc">
+          </p>
         </div>
 
-        <button class="ui button" type="submit" onclick='toggleVideo(true)'>Start</button>
+        <button class="ui button" type="submit">Start</button>
         <!--<div class="ui error message"></div>-->
+
       </form>
 
       <form id="ratings-form" class="ui form"
@@ -191,30 +202,30 @@
       >
         <p class="instructions">Closing thoughts:</p>
 
-        <div class="grouped fields">
+        <div class="grouped fields" id="variant-choices">
           <label>Best variation?</label>
           <div class="field">
             <div class="ui radio checkbox">
               <input type="radio" name="variant">
-              <label>Static A</label>
+              <label style="background: #078213">Green</label>
             </div>
           </div>
           <div class="field">
             <div class="ui radio checkbox">
               <input type="radio" name="variant">
-              <label>Static B</label>
+              <label style="background: #D23E33">Red</label>
             </div>
           </div>
           <div class="field">
             <div class="ui radio checkbox">
               <input type="radio" name="variant">
-              <label>Adaptive A</label>
+              <label style="background: #9855CF">Purple</label>
             </div>
           </div>
           <div class="field">
             <div class="ui radio checkbox">
               <input type="radio" name="variant">
-              <label>Adaptive B</label>
+              <label style="background: #3EA6EE">Blue</label>
             </div>
           </div>
         </div>

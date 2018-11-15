@@ -13,8 +13,8 @@ Run the Docker image using
 ```
 docker run -p 9997:80 -d -t physio-difficulty:latest
 ```
-The application should then running on port 9997 which you can access by visiting 
+The application should then be running on port 9997 which you can access by visiting 
 ```
 http://localhost:9997/
 ```
-__Note: Webcam function through http only works through Firefox__
+__Note: Webcam function through http only works on Firefox__

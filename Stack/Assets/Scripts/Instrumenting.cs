@@ -5,6 +5,7 @@ using UnityEngine;
 public class Instrumenting : MonoBehaviour
 {
     public Difficulty difficulty;
+    public Score score;
 
     float screenWidth;
     float originalWidth;
@@ -13,6 +14,7 @@ public class Instrumenting : MonoBehaviour
     List<float> dropXs = new List<float>();
     List<float> dropWidths = new List<float>();
     List<int> dropDifficulties = new List<int>();
+    List<float> dropScore = new List<float>();
 
     string[] COLORS = {
         "#078213", // green
@@ -50,6 +52,8 @@ public class Instrumenting : MonoBehaviour
 
         dropXs.Add(x / screenWidth);
         dropWidths.Add(width / originalWidth);
+
+        dropScore.Add(score.amount);
     }
 
     public void ReportGame(bool earlyExit = false)
@@ -59,6 +63,7 @@ public class Instrumenting : MonoBehaviour
             dropXs.ToArray(),
             dropWidths.ToArray(),  // for convenience
             dropDifficulties.ToArray(),
+            dropScore.ToArray(),
             // the total score is the amount of items
             earlyExit
         });

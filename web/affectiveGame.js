@@ -1,27 +1,27 @@
 // Global variables
-const EMOTXT = ["HAPPINESS", "SADNESS" , "SURPRISE" , "FEAR" , "ANGER" , "DISGUST"] 
-const HAPPINESS = 0 
-const SADNESS = 1 
-const SURPRISE = 2 
-const FEAR = 3 
-const ANGER = 4 
-const DISGUST = 5 
+const EMOTXT = ["HAPPINESS", "SADNESS" , "SURPRISE" , "FEAR" , "ANGER" , "DISGUST"]
+const HAPPINESS = 0
+const SADNESS = 1
+const SURPRISE = 2
+const FEAR = 3
+const ANGER = 4
+const DISGUST = 5
 
 const MAX_DELTA = 13
 
 const UPLOAD_INTERVAL = 400
 const DIFF_INTERVAL = 500
 
-var AFF_ADAPTIVE = 3 
-var CLS_ADAPTIVE = 4 
+var AFF_ADAPTIVE = 3
+var CLS_ADAPTIVE = 4
 var game_type = undefined
 
 var sendImageTimer = undefined
 var ddaTimer = undefined
 
-var user_skill = 0 
+var user_skill = 0
 var emo_baseline = []
-var au_baseline = [] 
+var au_baseline = []
 var physio_baseline = []
 var au_current = undefined
 var game_running = false
@@ -34,10 +34,10 @@ var cur_difficulty = 0
 var cur_physio = [0,0,0,0]
 var delta = [45, 55]
 
-var prev_width = 1 
+var prev_width = 1
 
 // Websocket
-var physioSocket 
+var physioSocket
 
 function init(){
 	// $(document).keydown(function(e){
@@ -50,11 +50,11 @@ function init(){
 
 	random_assign = math.randomInt(2)
 	if (random_assign === 0 ) {
-		AFF_ADAPTIVE = 3 
-		CLS_ADAPTIVE = 4 
+		AFF_ADAPTIVE = 3
+		CLS_ADAPTIVE = 4
 	}else{
-		AFF_ADAPTIVE = 4 
-		CLS_ADAPTIVE = 3 
+		AFF_ADAPTIVE = 4
+		CLS_ADAPTIVE = 3
 	}
 	console.log("Affective adaptive is variant", AFF_ADAPTIVE)
 }
@@ -62,14 +62,14 @@ function init(){
 function connectWebSocket(){
   try {
 		physioSocket = new WebSocket("ws://localhost:9998/echo")
-		
+
 		physioSocket.onopen = function() {
 		   // Web Socket is connected
 		   console.log("Websocket is connected")
 			 physio_active = true
 		}
-		
-		physioSocket.onmessage = function (evt) { 
+
+		physioSocket.onmessage = function (evt) {
 			 // Message : GSR, IBI-Mean, IBI-Variance, HR-Mean samples at 4Hz
 		   var received_msg = evt.data;
 			 var res = received_msg.split(",")
@@ -92,8 +92,8 @@ function connectWebSocket(){
 			 		cur_physio = res
 			 }
 		}
-		
-		physioSocket.onclose = function() { 
+
+		physioSocket.onclose = function() {
 		   // Web Socket is closed.
 		   console.log("Connection is closed...")
 			 physio_active = false
@@ -108,7 +108,7 @@ function connectWebSocket(){
 function toggleVideo(enabled){
 	video = document.querySelector("#videoElement")
 
-	if (navigator.mediaDevices.getUserMedia && enabled) {       
+	if (navigator.mediaDevices.getUserMedia && enabled) {
 			navigator.mediaDevices.getUserMedia({video: true})
 			.then(function(stream) {
 				$("#webcamToggle").get(0).checked = true
@@ -126,7 +126,7 @@ function toggleVideo(enabled){
 	} else {
 	  $("#webcamToggle").get(0).checked = false
 		video.srcObject.getTracks().forEach(track => track.stop())
-		$("#capturedImage").attr('src', 'images/defaultuser.png') 
+		$("#capturedImage").attr('src', 'images/defaultuser.png')
 		clearInterval(sendImageTimer)
 		clearInterval(ddaTimer)
 	}
@@ -135,17 +135,17 @@ function toggleVideo(enabled){
 function sendImage(override){
 	if (game_running && $("#webcamToggle").get(0).checked || override) {
 		var video = $("#videoElement").get(0)
-		
+
 		var canvas = document.createElement("canvas")
 		canvas.height = video.videoHeight * 0.30
 		canvas.width = video.videoWidth * 0.30
 		canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height)
-		
+
 		var img = document.createElement("img")
 		img.src = canvas.toDataURL()
 
 		var loopback = $("#displayToggle").get(0).checked ? 1 : 0
-		
+
 		$.ajax({
 		   type: "POST",
 		   url: "post.php",
@@ -158,7 +158,7 @@ function handleMsg(msg){
 	if ($("#webcamToggle").get(0).checked) {
 		var myObj = JSON.parse(msg)
 		if (myObj.img) {
-			if ($("#displayToggle").get(0).checked) $("#capturedImage").attr('src', myObj.img) 
+			if ($("#displayToggle").get(0).checked) $("#capturedImage").attr('src', myObj.img)
 			au_current = myObj.fau
 			if (gameVariant === 1 && game_running){
 				au_baseline.push(au_current)
@@ -228,7 +228,7 @@ function facialAdjust() {
 }
 
 function physioAdjust() {
-	var adj = 0 
+	var adj = 0
 
 	// Heart rate
 	if (parseInt(cur_physio[3]) <= parseInt(physio_baseline._data[3])){
@@ -259,10 +259,10 @@ function auMapping(arr) {
 	// Anger	4 + 5 + 7 + 23
 	// Disgust	9 + 15 + 16
 
-	happiness = ( arr._data[4] + arr._data[8] ) / 2 
-	sadness = ( arr._data[0] + arr._data[2] + arr._data[10]) / 3 
+	happiness = ( arr._data[4] + arr._data[8] ) / 2
+	sadness = ( arr._data[0] + arr._data[2] + arr._data[10]) / 3
 	surprise = (  arr._data[0] + arr._data[1] + arr._data[3] + arr._data[15] ) / 4
-	fear = ( arr._data[0] + arr._data[1] + arr._data[2] + arr._data[3] + arr._data[5] + arr._data[12] + arr._data[15]) / 7 
+	fear = ( arr._data[0] + arr._data[1] + arr._data[2] + arr._data[3] + arr._data[5] + arr._data[12] + arr._data[15]) / 7
 	anger = (  arr._data[2] + arr._data[3] + arr._data[5] + arr._data[13] ) / 4
 	disgust = (  arr._data[6] + arr._data[10] ) / 2
 

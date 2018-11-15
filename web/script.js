@@ -2,6 +2,7 @@ let sessionId = undefined  // will be assigned
 let subjectName = undefined
 let gameVariant = 0  // starts from 1
 let gameReplay = undefined  // starts from 1
+let maxScore = undefined
 
 const DATABASE = firebase.database()
 
@@ -152,6 +153,20 @@ let submitFinal = () => {
     DATABASE.ref(`${sessionId}/subjectInfo`).update(toStore)
 }
 
+let randBetween = (a, b) => Math.random() * (b - a) + a
+
+
+let computeLeaderboard = () => {
+    const percentile = randBetween(.1, 3.2)
+
+    const CHEERINGS = ['WOW', 'Amazing', 'Great']
+    let cheering = CHEERINGS[Math.floor(percentile)]
+
+    $('#cheering').text(cheering)
+    $('#percentile').text(percentile.toFixed(1))
+}
+
+
 // external
 function gameLoaded() {
     if (gameVariant === 0) {// still on the intro form, game not ready to accept input
@@ -167,11 +182,15 @@ function gameLoaded() {
 	 game_running = true
 	 prev_width = 1
 
-    if (gameVariant >= 3 && gameReplay === EARLY_EXIT_REPLAY_ALLOWED)  // last two play allow early exit
+    // last two variants are adaptive
+    if (gameVariant >= 3 && gameReplay === EARLY_EXIT_REPLAY_ALLOWED) {
         $('#early-exit-instruction').animate({opacity: 1}, 400)
+        gameInstance.SendMessage('Score', 'SetModifier', 12)
+    }
+
 }
 
-function gameOver(time, x, width, difficulty, earlyExit) {
+function gameOver(time, x, width, difficulty, scores, earlyExit) {
     earlyExit = (earlyExit === "True")  // convert str to bool
 
     DATABASE.ref(`${sessionId}/variant-${gameVariant}/replay-${gameReplay}`).update({
@@ -179,6 +198,7 @@ function gameOver(time, x, width, difficulty, earlyExit) {
         x,
         width,
         difficulty,
+        scores,
 		  all_emotions,
 		  all_physio,
 		  all_difficulty,
@@ -194,6 +214,7 @@ function gameOver(time, x, width, difficulty, earlyExit) {
     // reached number of replays or bored
     if (gameReplay === GAME_REPLAYS[gameVariant - 1] || earlyExit) {
         gameInstance.SendMessage('Main Camera', 'SetKeyboardCapture', 0)
+        computeLeaderboard()
         showRatings()
 
 		  // toggleVideo(false)

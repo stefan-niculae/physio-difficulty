@@ -308,6 +308,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   difficulty: {fileID: 448881549}
+  score: {fileID: 1151797224}
 --- !u!1 &951202319
 GameObject:
   m_ObjectHideFlags: 0
@@ -490,6 +491,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9092ea0182802495bb68bf57af8fb3c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  difficulty: {fileID: 448881549}
+  modifier: 1
 --- !u!1 &1372379857
 GameObject:
   m_ObjectHideFlags: 0

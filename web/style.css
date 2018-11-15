@@ -97,3 +97,7 @@ form {
     color: white;
     font-weight: bold;
 }
+
+#percentile {
+    font-weight: bold;
+}

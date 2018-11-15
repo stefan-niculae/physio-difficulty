@@ -134,7 +134,7 @@ public class MovingPlatform : MonoBehaviour {
         }
 
         currentState = State.Dropped;
-        score.amount += Mathf.Max(Mathf.Pow(difficulty.amount / 100f, 2), .01f);
+        score.Increase();
 
         transform.localScale = newSize;
 

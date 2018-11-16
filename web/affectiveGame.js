@@ -9,8 +9,8 @@ const DISGUST = 5
 
 const MAX_DELTA = 13
 
-const UPLOAD_INTERVAL = 400
-const DIFF_INTERVAL = 500
+const UPLOAD_INTERVAL = 350
+const DIFF_INTERVAL = 750
 
 var AFF_ADAPTIVE = 3
 var CLS_ADAPTIVE = 4
@@ -22,6 +22,7 @@ var ddaTimer = undefined
 var user_skill = 0
 var emo_baseline = []
 var au_baseline = []
+var au_baseline_mat = undefined
 var physio_baseline = []
 var au_current = undefined
 var game_running = false
@@ -46,7 +47,7 @@ function init(){
 	// 	}
 	// });
 
-	connectWebSocket()
+	connectWebSocket(true)
 
 	random_assign = math.randomInt(2)
 	if (random_assign === 0 ) {
@@ -59,7 +60,14 @@ function init(){
 	console.log("Affective adaptive is variant", AFF_ADAPTIVE)
 }
 
-function connectWebSocket(){
+function connectWebSocket(enable){
+  if (!enable) {
+  	   if (physio_active) physioSocket.close()
+	   $("#physioToggle").get(0).checked = false
+		physio_active = false
+		return
+  }
+ 
   try {
 		physioSocket = new WebSocket("ws://localhost:9998/echo")
 
@@ -67,6 +75,7 @@ function connectWebSocket(){
 		   // Web Socket is connected
 		   console.log("Websocket is connected")
 			 physio_active = true
+	   	 $("#physioToggle").get(0).checked = true
 		}
 
 		physioSocket.onmessage = function (evt) {
@@ -97,6 +106,7 @@ function connectWebSocket(){
 		   // Web Socket is closed.
 		   console.log("Connection is closed...")
 			 physio_active = false
+	   	 $("#physioToggle").get(0).checked = false
 		}
 	} // End try
 	catch(err) {
@@ -173,7 +183,11 @@ function dynamicDifficulty(){
 
 	if (gameVariant === AFF_ADAPTIVE) {
 		auInc = facialAdjust()
-		hrInc = physioAdjust()
+		if (physio_active) {
+			hrInc = physioAdjust()
+		} else {
+			hrInc = 0 
+		}
 		baseInc = baseAdjust()
 
 		cur_difficulty = clip(cur_difficulty + auInc + hrInc + baseInc)
@@ -187,7 +201,7 @@ function dynamicDifficulty(){
 
 		cur_difficulty = clip(cur_difficulty + random_increase )
 		// Collect emotion data
-	  var au = math.subtract(math.matrix(au_current), au_baseline)
+	  var au = math.subtract(math.matrix(au_current), au_baseline_mat)
 	  var emotions = auMapping(au)
 
 	  all_difficulty.push(cur_difficulty)
@@ -204,7 +218,7 @@ function baseAdjust() {
 }
 
 function facialAdjust() {
-	var au = math.subtract(math.matrix(au_current), au_baseline)
+	var au = math.subtract(math.matrix(au_current), au_baseline_mat)
 	var emotions = auMapping(au)
 	var	emotion = argMax(emotions)
 	// console.log(EMOTXT[emotion])
@@ -290,7 +304,7 @@ function receiveWidth(lastWidth) {
 		var performance_index =  lastWidth / prev_width
 		var new_delta = delta[2] + parseInt(performance_index * 10 - 5)
 
-		console.log(performance_index, new_delta)
+		// console.log(performance_index, new_delta)
 		delta = [math.max([new_delta - MAX_DELTA, 0]), math.min([new_delta + MAX_DELTA + user_skill, 100]), new_delta]
 		prev_width = lastWidth
 	}

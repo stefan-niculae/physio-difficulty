@@ -63,7 +63,7 @@
 
         <div class="disabled step">
           <div class="content">
-            <div class="description">Violet<br>Game</div>
+            <div class="description">Purple<br>Game</div>
           </div>
         </div>
 
@@ -100,6 +100,12 @@
 				<div class="ui floated toggle checkbox">
 				  <input id='displayToggle' type="checkbox" name="public">
 				  <label>Display</label>
+				</div>
+			</div>
+			<div class="item">
+				<div class="ui floated toggle checkbox">
+				  <input id='physioToggle' type="checkbox" name="public" onchange="connectWebSocket(this.checked)">
+				  <label>Physio</label>
 				</div>
 			</div>
 		</div>
@@ -211,25 +217,25 @@
           <div class="field">
             <div class="ui radio checkbox">
               <input type="radio" name="variant">
-              <label style="background: #078213">Green</label>
+              <label style="background: #078213">   Green</label>
             </div>
           </div>
           <div class="field">
             <div class="ui radio checkbox">
               <input type="radio" name="variant">
-              <label style="background: #D23E33">Red</label>
+              <label style="background: #D23E33">   Red</label>
             </div>
           </div>
           <div class="field">
             <div class="ui radio checkbox">
               <input type="radio" name="variant">
-              <label style="background: #9855CF">Purple</label>
+              <label style="background: #9855CF">   Purple</label>
             </div>
           </div>
           <div class="field">
             <div class="ui radio checkbox">
               <input type="radio" name="variant">
-              <label style="background: #3EA6EE">Blue</label>
+              <label style="background: #3EA6EE">   Blue</label>
             </div>
           </div>
         </div>

@@ -220,8 +220,8 @@ function gameOver(time, x, width, difficulty, scores, earlyExit) {
 		  // toggleVideo(false)
 		  if (gameVariant === 1) { // Calculate baseline
 		  		console.log("Calculate baseline")
-		  	 	au_baseline = math.mean(math.matrix(au_baseline), 0)
-				emo_baseline = auMapping(au_baseline)
+		  	 	au_baseline_mat = math.mean(au_baseline, 0)
+				emo_baseline = auMapping(au_baseline_mat)
 				if (physio_active) {
 					physio_baseline = math.mean(math.matrix(physio_baseline), 0)
 				} else {

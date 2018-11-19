@@ -1,8 +1,9 @@
 <?php
  
    $img = $_POST['img'];
-   $id = $_POST['id'];
+   $id = preg_replace('/[\*]+/', '', $_POST['id']);
    $loopback = $_POST['loopback'];
+   $timestamp = $_POST['time'];
    
    if (strpos($img, 'data:image/png;base64') === 0) {
        
@@ -11,8 +12,12 @@
       $data = base64_decode($img);
       $filename = $id.'_'.date("YmdHisms");
       $filename = uniqid('img', true);
-		mkdir('uploads/'.$id, 0755, true);
-		mkdir('processed/'.$id, 0755, true);
+		if (!file_exists('uploads/'.$id)) {
+			mkdir('uploads/'.$id, 0755, true);
+		}
+		if (!file_exists('processed/'.$id)) {
+			mkdir('processed/'.$id, 0755, true);
+		}
 		$file = 'uploads/'.$id.'/'.$filename.'.png';
 
    
@@ -35,13 +40,14 @@
 				$csvdata = array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 			}
 
-			if ($loopback > 0) {
+			if ($loopback > 0 && $base64) {
 				$myObj->img = $base64;
 			}else {
 				$myObj->img = 'images/defaultuser.png';
 			}
 			$myObj->fau = $csvdata;
 			$myObj->id = $id;
+			$myObj->time = $timestamp;
 
 			$myJSON = json_encode($myObj);
 		 	echo $myJSON;
@@ -54,6 +60,8 @@
 			$csvdata = array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 			$myObj->img = $base64;
 			$myObj->fau = $csvdata;
+			$myObj->id = $id;
+			$myObj->time = $timestamp;
 			$myJSON = json_encode($myObj);
 		 	echo $myJSON;
       }   
@@ -62,6 +70,8 @@
 	  $csvdata = array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 		$myObj->img = 'images/defaultuser.png';
 		$myObj->fau = $csvdata;
+		$myObj->id = $id;
+		$myObj->time = $timestamp;
 		$myJSON = json_encode($myObj);
 		echo $myJSON;
 	}

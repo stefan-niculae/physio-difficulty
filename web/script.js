@@ -200,14 +200,18 @@ function gameOver(time, x, width, difficulty, scores, earlyExit) {
         difficulty,
         scores,
 		  all_emotions,
+		  time_emotions,
 		  all_physio,
+		  time_physio,
 		  all_difficulty,
         earlyExit,
 		  game_type,
 		  physio_active,
     })
 	 all_emotions = []
+	 time_emotions = []
 	 all_physio = []
+	 time_physio = []
 	 all_difficulty = []
 	 game_running = false
 

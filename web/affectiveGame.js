@@ -25,11 +25,14 @@ var au_baseline = []
 var au_baseline_mat = undefined
 var physio_baseline = []
 var au_current = undefined
+var au_current_time = undefined
 var game_running = false
 var physio_active = false
 
 var all_emotions = []
+var time_emotions = []
 var all_physio = []
+var time_physio = []
 var all_difficulty = []
 var cur_difficulty = 0
 var cur_physio = [0,0,0,0]
@@ -93,7 +96,12 @@ function connectWebSocket(enable){
 			 }
 
 		   //console.log(res)
+
 		   all_physio.push(res)
+
+			var date = new Date();
+			var timestamp = date.getTime();
+			time_physio.push(timestamp)
 
 			 if (gameVariant === 1 && game_running) {
 			 		physio_baseline.push(res)
@@ -149,6 +157,9 @@ function sendImage(override){
 		var canvas = document.createElement("canvas")
 		canvas.height = video.videoHeight * 0.30
 		canvas.width = video.videoWidth * 0.30
+
+		var date = new Date();
+		var timestamp = date.getTime();
 		canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height)
 
 		var img = document.createElement("img")
@@ -159,7 +170,7 @@ function sendImage(override){
 		$.ajax({
 		   type: "POST",
 		   url: "post.php",
-		   data: { img: img.src, id: encodeURI(subjectName), loopback: $("#displayToggle").get(0).checked ? 1 : 0}
+		   data: { img: img.src, id: encodeURI(subjectName), loopback: $("#displayToggle").get(0).checked ? 1 : 0, time: timestamp}
 		}).done(handleMsg)
 	}
 }
@@ -168,8 +179,13 @@ function handleMsg(msg){
 	if ($("#webcamToggle").get(0).checked) {
 		var myObj = JSON.parse(msg)
 		if (myObj.img) {
-			if ($("#displayToggle").get(0).checked) $("#capturedImage").attr('src', myObj.img)
+			if ($("#displayToggle").get(0).checked) {
+				$("#capturedImage").attr('src', myObj.img)
+			} else {
+				$("#capturedImage").attr('src', 'images/defaultuser.png')
+			}
 			au_current = myObj.fau
+			au_current_time = myObj.time
 			if (gameVariant === 1 && game_running){
 				au_baseline.push(au_current)
 			} else if(gameVariant === 3){
@@ -203,6 +219,7 @@ function dynamicDifficulty(){
 		// Collect emotion data
 	  var au = math.subtract(math.matrix(au_current), au_baseline_mat)
 	  var emotions = auMapping(au)
+	  time_emotions.push(au_current_time)
 
 	  all_difficulty.push(cur_difficulty)
     gameInstance.SendMessage('Difficulty', 'SetDifficulty', cur_difficulty)
@@ -220,6 +237,7 @@ function baseAdjust() {
 function facialAdjust() {
 	var au = math.subtract(math.matrix(au_current), au_baseline_mat)
 	var emotions = auMapping(au)
+	time_emotions.push(au_current_time)
 	var	emotion = argMax(emotions)
 	// console.log(EMOTXT[emotion])
 

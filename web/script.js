@@ -25,7 +25,8 @@ $(() => {
 
     $('#outro-form').form({
         fields: {
-            variant: 'checked' // validation
+            variant: 'checked', // validation
+            comments: 'empty',
         }
     })
     $('#outro-form .radio input').change(() => $('form button').addClass('primary'))

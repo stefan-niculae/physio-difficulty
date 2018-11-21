@@ -184,9 +184,10 @@ function gameLoaded() {
 	 prev_width = 1
 
     // last two variants are adaptive
-    if (gameVariant >= 3 && gameReplay === EARLY_EXIT_REPLAY_ALLOWED) {
-        $('#early-exit-instruction').animate({opacity: 1}, 400)
+    if (gameVariant >= 3) {
         gameInstance.SendMessage('Score', 'SetModifier', 12)
+        if (gameReplay === EARLY_EXIT_REPLAY_ALLOWED)
+            $('#early-exit-instruction').animate({opacity: 1}, 400)
     }
 
 }

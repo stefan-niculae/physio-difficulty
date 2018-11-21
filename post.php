@@ -10,8 +10,9 @@
       $img = str_replace('data:image/png;base64,', '', $img);
       $img = str_replace(' ', '+', $img);
       $data = base64_decode($img);
-      $filename = $id.'_'.date("YmdHisms");
-      $filename = uniqid('img', true);
+      // $filename = $id.'_'.date("YmdHisms");
+      // $filename = uniqid('img', true);
+		$filename = 'img_'.$timestamp;
 		if (!file_exists('uploads/'.$id)) {
 			mkdir('uploads/'.$id, 0755, true);
 		}

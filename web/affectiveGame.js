@@ -104,7 +104,12 @@ function connectWebSocket(enable){
 			time_physio.push(timestamp)
 
 			 if (gameVariant === 1 && game_running) {
-			 		physio_baseline.push(res)
+			 		try{
+			 			physio_baseline.push(res)
+					}
+					catch(err){
+						console.log('Error push to physio_baseline')
+					}
 			 } else {
 			 		cur_physio = res
 			 }
@@ -216,13 +221,19 @@ function dynamicDifficulty(){
 		random_increase = math.randomInt(7) - 3
 
 		cur_difficulty = clip(cur_difficulty + random_increase )
-		// Collect emotion data
-	  var au = math.subtract(math.matrix(au_current), au_baseline_mat)
-	  var emotions = auMapping(au)
-	  time_emotions.push(au_current_time)
-
 	  all_difficulty.push(cur_difficulty)
-    gameInstance.SendMessage('Difficulty', 'SetDifficulty', cur_difficulty)
+     gameInstance.SendMessage('Difficulty', 'SetDifficulty', cur_difficulty)
+		// Collect emotion data
+	  try{
+	  	var au = math.subtract(math.matrix(au_current), au_baseline_mat)
+	  	time_emotions.push(au_current_time)
+	  	var emotions = auMapping(au)
+	  }
+	  catch(err){
+	  	console.log('Error')
+	  	console.log(err)
+	  }
+
 	}
 }
 
@@ -236,8 +247,8 @@ function baseAdjust() {
 
 function facialAdjust() {
 	var au = math.subtract(math.matrix(au_current), au_baseline_mat)
-	var emotions = auMapping(au)
 	time_emotions.push(au_current_time)
+	var emotions = auMapping(au)
 	var	emotion = argMax(emotions)
 	// console.log(EMOTXT[emotion])
 
@@ -317,10 +328,10 @@ function clip(x) {
 function receiveWidth(lastWidth) {
 	// Update delta according to performance
 	if (gameVariant > 2 && prev_width != lastWidth) {
-	  delta = [math.max([cur_difficulty - MAX_DELTA, 0]), math.min([cur_difficulty + MAX_DELTA + user_skill, 100]), cur_difficulty]
+	   // delta = [math.max([cur_difficulty - MAX_DELTA, 0]), math.min([cur_difficulty + MAX_DELTA + user_skill, 100]), cur_difficulty]
 
 		var performance_index =  lastWidth / prev_width
-		var new_delta = delta[2] + parseInt(performance_index * 10 - 5)
+		var new_delta = delta[2] + parseInt(performance_index * 8 - 4)
 
 		// console.log(performance_index, new_delta)
 		delta = [math.max([new_delta - MAX_DELTA, 0]), math.min([new_delta + MAX_DELTA + user_skill, 100]), new_delta]
